@@ -1,14 +1,22 @@
 #![allow(non_snake_case)]
 
-use dioxus::{prelude::*, html::AttributeDiscription};
+use dioxus::prelude::*;
 
-// fn onclick<'a, E, T>(_cx: &'a ::dioxus_core::ScopeState, _f: impl FnMut(::dioxus_core::Event<MouseData>) -> E + 'a) -> ::dioxus_core::Attribute<'a>
-// where
-//     E: crate::EventReturn<T> {
-//
-//     }
+const TEXT_COLOR: &str = "#FFFFFF";
+const ACCENT_COLOR: &str = "#3584E4";
+const BACKGROUND_COLOR: &str = "#242424";
+const ELEMENT_COLOR: &str = "#3A3A3A";
+const ELEMENT_HOVER_COLOR: &str = "#404040";
+const ELEMENT_CLICKED_COLOR: &str = "#666666";
 
 type MouseEventHandler<'a> = EventHandler<'a, MouseEvent>;
+
+pub enum ButtonStyle {
+    Regular,
+    Compact,
+    Pill,
+    Circular,
+}
 
 #[derive(Props)]
 pub struct ButtonProps<'a> {
@@ -40,8 +48,12 @@ pub struct ButtonProps<'a> {
     // Attributes
     #[props(default)]
     autofocus: bool,
-    #[props(default)]
+    #[props(default = false)]
     disabled: bool,
+
+    // Custom properties
+    #[props(default = ButtonStyle::Regular)]
+    button_style: ButtonStyle,
 }
 
 pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
@@ -60,10 +72,17 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
         onmouseup,
         autofocus,
         disabled,
+        button_style,
     } = cx.props;
-
+    
+    let style = concat!(include_str!("../styles/Button/index.css"), include_str!("../styles/Button/regular.css"));
+    
+    // TODO! En comptes de fer un document per cada tema, fer una linia que s'hagi d'incloure a `style` al principi del programa, creant les classes corresponents.
     let rsx = rsx!(
-        button {
+        style {
+            style
+        }
+        button { class: "btn btn-regular",
             onclick: move |e| onclick.call(e),
             oncontextmenu: move |e| oncontextmenu.call(e),
             ondoubleclick: move |e| ondoubleclick.call(e),

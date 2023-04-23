@@ -1,0 +1,31 @@
+.btn {
+    --tw-bg-opacity: 1;
+    background-color: rgb(58 58 58 / var(--tw-bg-opacity));
+    font-weight: 700;
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+    transition-property: color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+  
+  /* __play_start_utilities__ */
+  
+  .btn:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(64 64 64 / var(--tw-bg-opacity));
+  }
+  
+  /* __play_end_utilities__ */
+  
+  /* __play_start_utilities__ */
+  
+  .btn:active {
+    --tw-bg-opacity: 1;
+    background-color: rgb(102 102 102 / var(--tw-bg-opacity));
+  }
+  
+  /* __play_end_utilities__ */
+  
