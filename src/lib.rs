@@ -1,13 +1,12 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::{
-    dioxus_elements, inline_props, DragEvent, Element, EventHandler, FocusEvent, FormEvent,
+    dioxus_elements, inline_props, render, DragEvent, Element, EventHandler, FocusEvent, FormEvent,
     GlobalAttributes as GA, ImageEvent, KeyboardEvent, MediaEvent, MouseEvent, Props, Scope,
     ScrollEvent, SelectionEvent, ToggleEvent,
 };
+use dioxus_easyui_macros::render_component;
 use reusable::{reusable, reuse};
-
-use dioxus_easyui_macros::render;
 
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub enum Theme {
@@ -61,31 +60,8 @@ pub fn InitEasyGui(cx: Scope, theme: Option<Theme>) -> Element {
     }
 }
 
-#[derive(Default)]
-pub enum ButtonStyle {
-    #[default]
-    Regular,
-    Compact,
-    Pill,
-    Circular,
-}
-
-impl std::fmt::Display for ButtonStyle {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let d = match self {
-            ButtonStyle::Regular => "easygui-btn-regular",
-            ButtonStyle::Compact => "easygui-btn-compact",
-            ButtonStyle::Pill => "easygui-btn-pill",
-            ButtonStyle::Circular => "easygui-btn-circular",
-        };
-
-        f.write_str(d)
-    }
-}
-
-fn _false() -> String {
-    String::from("false")
-}
+// Global Attributes & Events
+// Uses the [reusable](https://crates.io/crates/reusable) crate to add the global attributes to the built elements.
 
 #[allow(dead_code)]
 #[reusable(global_attributes)]
@@ -335,6 +311,28 @@ struct GlobalEvents<'a> {
     onwaiting: EventHandler<'a, MediaEvent>,
 }
 
+#[derive(Default)]
+pub enum ButtonStyle {
+    #[default]
+    Regular,
+    Compact,
+    Pill,
+    Circular,
+}
+
+impl std::fmt::Display for ButtonStyle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let d = match self {
+            ButtonStyle::Regular => "easygui-btn-regular",
+            ButtonStyle::Compact => "easygui-btn-compact",
+            ButtonStyle::Pill => "easygui-btn-pill",
+            ButtonStyle::Circular => "easygui-btn-circular",
+        };
+
+        f.write_str(d)
+    }
+}
+
 #[reuse(global_events, global_attributes)]
 #[derive(Props)]
 pub struct ButtonProps<'a> {
@@ -361,15 +359,15 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
     } = cx.props;
 
     let accent = if *accent { "accent" } else { "" };
-    let class = class.as_deref().unwrap_or_default();
-    let disabled = disabled.map(|b| if b { "true" } else { "false" } );
+    let class = class.unwrap_or_default();
+    let disabled = disabled.map(|b| if b { "true" } else { "false" });
 
-    render! {
+    render_component! {
         button {
             class: "easygui-btn {button_style} {accent} {class}",
 
             disabled: disabled,
-            
+
             $GLOBALS,
 
             children
@@ -378,25 +376,36 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
 }
 
 // Headers
+#[reuse(global_attributes, global_events)]
 #[derive(Props)]
 pub struct HeaderProps<'a> {
-    #[props(into, default = String::new())]
-    class: String,
     children: Element<'a>,
 }
 
 pub fn H1<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
-    let HeaderProps { class, children } = cx.props;
+    let HeaderProps {
+        class, children, ..
+    } = cx.props;
 
-    render! {
-        h1 { class: "easygui-h1 {class}",
+    let class = class.unwrap_or_default();
+
+    render_component! {
+        h1 {
+            class: "easygui-h1 {class}",
+
+            $GLOBALS,
+
             children
         }
     }
 }
 
 pub fn H2<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
-    let HeaderProps { class, children } = cx.props;
+    let HeaderProps {
+        class, children, ..
+    } = cx.props;
+
+    let class = class.unwrap_or_default();
 
     render! {
         h1 { class: "easygui-h2 {class}",
@@ -406,7 +415,11 @@ pub fn H2<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 }
 
 pub fn H3<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
-    let HeaderProps { class, children } = cx.props;
+    let HeaderProps {
+        class, children, ..
+    } = cx.props;
+
+    let class = class.unwrap_or_default();
 
     render! {
         h1 { class: "easygui-h3 {class}",
@@ -416,11 +429,82 @@ pub fn H3<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 }
 
 pub fn H4<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
-    let HeaderProps { class, children } = cx.props;
+    let HeaderProps {
+        class, children, ..
+    } = cx.props;
+
+    let class = class.unwrap_or_default();
 
     render! {
         h1 { class: "easygui-h4 {class}",
             children
         }
     }
+}
+
+#[reuse(global_attributes, global_events)]
+#[derive(Props)]
+pub struct ListProps<'a> {
+    children: Element<'a>,
+}
+
+/// Creates a List of items.
+///
+/// To work properly, use the [`ListItem`](crate::ListItem) component. If another element is used the result is unspecified.
+pub fn List<'a>(cx: Scope<'a, ListProps<'a>>) -> Element {
+    let ListProps { children, .. } = cx.props;
+
+    // TODO! Add $GLOBALS
+    render! {
+        div {
+            children
+        }
+    }
+}
+
+#[reuse(global_attributes, global_events)]
+#[derive(Props)]
+pub struct ListItemProps<'a> {
+    title: Option<&'a str>,
+    subtitle: Option<&'a str>,
+    suffix: Element<'a>,
+    prefix: Element<'a>,
+}
+
+/// Creates a new item for a [`List`](crate::List).
+///
+/// Use only nested in a `List` element.
+pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
+    let ListItemProps {
+        class,
+        title,
+        subtitle,
+        suffix,
+        prefix,
+        ..
+    } = cx.props;
+
+    let class = class.unwrap_or_default();
+
+    // TODO! Add $GLOBALS
+    render! {
+        div { class: " {class}"
+            
+        }
+    }
+}
+
+/// Re-export of all the elements with the same name as the [`dioxus`](dioxus::prelude::dioxus_elements) ones.
+///
+/// Useful if you want to replace all of them without having to change the names.
+/// 
+/// All components unique to dioxus-easyui (for example [`List`](crate::List)) will remain with the same name.
+mod prelude {
+    pub use crate::Button as button;
+    pub use crate::H1 as h1;
+    pub use crate::H2 as h2;
+    pub use crate::H3 as h3;
+    pub use crate::H4 as h4;
+    pub use crate::List;
+    pub use crate::ListItem;
 }

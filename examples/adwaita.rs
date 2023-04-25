@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::*;
-use dioxus_easyui::{Button, ButtonStyle, InitEasyGui, Theme, H1, H2, H3, H4};
+use dioxus_easyui::{Button, ButtonStyle, InitEasyGui, List, Theme, H1, H2, H3, H4};
 
 fn main() {
     dioxus_desktop::launch(App);
@@ -36,7 +36,6 @@ fn App(cx: Scope) -> Element {
                 Button {
                     button_style: ButtonStyle::Regular,
                     onclick: move |_| println!("It works!!!"),
-                    disabled: true,
                     "Regular"
                 }
                 Button {
@@ -51,6 +50,10 @@ fn App(cx: Scope) -> Element {
                     button_style: ButtonStyle::Circular,
                     "C"
                 }
+            }
+
+            List {
+                
             }
         }
     })

@@ -7,14 +7,16 @@ use proc_macro::TokenStream;
 /// render! {
 ///     button {
 ///         // Specific attributes
-///         disabled: "{disabled}",
+///         disabled: "true",
+///         // Globals Substitution
 ///         $GLOBALS,
+///         // Children
 ///         "Button"
 ///     }
 /// }
 /// ```
 #[proc_macro]
-pub fn render(input: TokenStream) -> TokenStream {
+pub fn render_component(input: TokenStream) -> TokenStream {
     // Add globals to Component
     let input = input.to_string().replace(
         "$GLOBALS",
@@ -98,8 +100,6 @@ pub fn render(input: TokenStream) -> TokenStream {
         onvolumechange: move |e| cx.props.onvolumechange.call(e),
         onwaiting: move |e| cx.props.onwaiting.call(e)"#
     );
-
-    // panic!("{input}");
 
     format!("dioxus::prelude::render! {{ {input} }}")
         .parse()
