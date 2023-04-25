@@ -18,7 +18,7 @@ fn App(cx: Scope) -> Element {
             // Headers
             div {
                 H1 {
-                    "Title 1"
+                    "Title 1",
                 }
                 H2 {
                     "Title 2"
@@ -35,6 +35,7 @@ fn App(cx: Scope) -> Element {
             div { class: "easygui-example-buttongrid",
                 Button {
                     button_style: ButtonStyle::Regular,
+                    onclick: move |_| println!("It works!!!"),
                     "Regular"
                 }
                 Button {
