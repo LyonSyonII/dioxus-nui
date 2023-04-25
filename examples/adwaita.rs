@@ -36,6 +36,7 @@ fn App(cx: Scope) -> Element {
                 Button {
                     button_style: ButtonStyle::Regular,
                     onclick: move |_| println!("It works!!!"),
+                    disabled: true,
                     "Regular"
                 }
                 Button {

@@ -91,88 +91,88 @@ fn _false() -> String {
 #[reusable(global_attributes)]
 #[derive(Props, PartialEq)]
 /// Struct representing global HTML attributes that can be applied to various HTML elements.
-struct GlobalAttributes {
+struct GlobalAttributes<'a> {
     /// Specifies a shortcut key to activate or focus an element.
-    #[props(into, default = String::new())]
-    accesskey: String,
+    #[props(into)]
+    accesskey: Option<&'a str>,
     /// Controls whether and how text input is automatically capitalized as it is entered/edited by the user.
-    #[props(into, default = _false())]
-    autocapitalize: String,
+    #[props(into)]
+    autocapitalize: Option<&'a str>,
     /// Indicates whether an element should have input focus when the page loads.
-    #[props(into, default = _false())]
-    autofocus: String,
+    #[props(into)]
+    autofocus: Option<&'a str>,
     /// Specifies one or more class names for an element.
-    #[props(into, default = String::new())]
-    class: String,
+    #[props(into)]
+    class: Option<&'a str>,
     /// Indicates whether the content of an element can be edited by the user.
-    #[props(into, default = _false())]
-    contenteditable: String,
+    #[props(into)]
+    contenteditable: Option<&'a str>,
     /// Used to store custom data private to the page or application.
-    #[props(into, default = String::new())]
-    data: String,
+    #[props(into)]
+    data: Option<&'a str>,
     /// Specifies the text direction for the content in an element.
-    #[props(into, default = String::new())]
-    dir: String,
+    #[props(into)]
+    dir: Option<&'a str>,
     /// Specifies whether an element is draggable or not.
-    #[props(into, default = _false())]
-    draggable: String,
+    #[props(into)]
+    draggable: Option<&'a str>,
     /// Provides a hint for the type of user action that is expected when an element receives focus.
-    #[props(into, default = String::new())]
-    enterkeyhint: String,
+    #[props(into)]
+    enterkeyhint: Option<&'a str>,
     /// Indicates whether the element is relevant.
-    #[props(into, default = _false())]
-    hidden: String,
+    #[props(into)]
+    hidden: Option<&'a str>,
     /// Defines a unique identifier for an element.
-    #[props(into, default = String::new())]
-    id: String,
+    #[props(into)]
+    id: Option<&'a str>,
     /// Specifies a hint to the browser for which virtual keyboard to display.
-    #[props(into, default = String::new())]
-    inputmode: String,
+    #[props(into)]
+    inputmode: Option<&'a str>,
     /// Defines the type of the element.
-    #[props(into, default = String::new())]
-    is: String,
+    #[props(into)]
+    is: Option<&'a str>,
     /// Specifies a URL which designates a page which describes the offering.
-    #[props(into, default = String::new())]
-    itemid: String,
+    #[props(into)]
+    itemid: Option<&'a str>,
     /// Associates an element with one or more items within an HTML document.
-    #[props(into, default = String::new())]
-    itemprop: String,
+    #[props(into)]
+    itemprop: Option<&'a str>,
     /// Specifies additional items to include in the accessibility tree.
-    #[props(into, default = String::new())]
-    itemref: String,
+    #[props(into)]
+    itemref: Option<&'a str>,
     /// Specifies the URL(s) of the vocabulary that defines the item(s) for an element.
-    #[props(into, default = String::new())]
-    itemtype: String,
+    #[props(into)]
+    itemtype: Option<&'a str>,
     /// Specifies the primary language for the element's contents.
-    #[props(into, default = String::new())]
-    lang: String,
+    #[props(into)]
+    lang: Option<&'a str>,
     /// Provides a mechanism to enable the server to declare a policy for the page to report back to it when a nonce is used.
-    #[props(into, default = String::new())]
-    nonce: String,
+    #[props(into)]
+    nonce: Option<&'a str>,
     /// Assigns a part name to an element, so that it can be used from the element's CSS, JavaScript or other parts of the page.
-    #[props(into, default = String::new())]
-    part: String,
+    #[props(into)]
+    part: Option<&'a str>,
     /// Defines a role name for an element.
-    #[props(into, default = String::new())]
-    role: String,
+    #[props(into)]
+    role: Option<&'a str>,
     /// Assigns a slot name to an element.
-    #[props(into, default = String::new())]
-    slot: String,
+    #[props(into)]
+    slot: Option<&'a str>,
     /// Specifies whether a user can edit the content of an element.
-    #[props(into, default = String::new())]
-    spellcheck: String,
+    #[props(into)]
+    spellcheck: Option<&'a str>,
     /// Specifies an inline CSS style for an element.
-    #[props(into, default = String::new())]
-    style: String,
+    #[props(into)]
+    style: Option<&'a str>,
     /// Specifies the tabbing order for an element.
-    #[props(into, default = String::new())]
-    tabindex: String,
+    #[props(into)]
+    tabindex: Option<&'a str>,
     /// Defines a title for the element.
-    #[props(into, default = String::new())]
-    title: String,
+    #[props(into)]
+    title: Option<&'a str>,
     /// Specifies whether the element's attribute values and the values of its Text node children are to be translated when the page is localized.
-    #[props(into, default = String::new())]
-    translate: String,
+    #[props(into)]
+    translate: Option<&'a str>,
 }
 
 #[allow(dead_code)]
@@ -341,8 +341,7 @@ pub struct ButtonProps<'a> {
     children: Element<'a>,
 
     // Attributes
-    #[props(default)]
-    disabled: bool,
+    disabled: Option<bool>,
     #[props(default)]
     accent: bool,
 
@@ -362,12 +361,14 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
     } = cx.props;
 
     let accent = if *accent { "accent" } else { "" };
+    let class = class.as_deref().unwrap_or_default();
+    let disabled = disabled.map(|b| if b { "true" } else { "false" } );
 
     render! {
         button {
             class: "easygui-btn {button_style} {accent} {class}",
 
-            disabled: "{disabled}",
+            disabled: disabled,
             
             $GLOBALS,
 
