@@ -1,5 +1,5 @@
 
-/* Tailwind Playground: https://play.tailwindcss.com/xGCn7n3EKl?size=362x720&file=css */
+/* Tailwind Playground: https://play.tailwindcss.com/lKCnZsc1Ru?size=470x720&file=css */
 
 :root {
   --text-color: #fff;
@@ -12,6 +12,8 @@
   --element-active-color: #666;
   background-color: var(--background-color);
 }
+
+/* BUTTONS */
 
 .easygui-btn {
   background-color: var(--element-color);
@@ -80,34 +82,69 @@
   padding-bottom: 0.5rem;
 }
 
+/* HEADERS */
+
 .easygui-h1 {
   font-size: 1.875rem;
   font-weight: 1000;
   line-height: 2.5rem;
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(255 255 255);
 }
 
 .easygui-h2 {
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 2rem;
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(255 255 255);
 }
 
 .easygui-h3 {
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 2rem;
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(255 255 255);
 }
 
 .easygui-h4 {
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 2rem;
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(255 255 255);
+}
+
+/* LISTS */
+
+.easygui-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.easygui-list > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+  border-color: var(--background-color);
+}
+
+.easygui-list-item {
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  background-color: var(--element-color);
+  padding: 0.75rem;
+  font-weight: 500;
+  color: rgb(255 255 255);
+}
+
+.easygui-list-item:first-child {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
+.easygui-list-item:last-child {
+  border-bottom-right-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+.easygui-list-item:empty {
+  display: none;
 }

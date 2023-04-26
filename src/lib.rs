@@ -5,7 +5,7 @@ use dioxus::prelude::{
     GlobalAttributes as GA, ImageEvent, KeyboardEvent, MediaEvent, MouseEvent, Props, Scope,
     ScrollEvent, SelectionEvent, ToggleEvent,
 };
-use dioxus_easyui_macros::render_component;
+use dioxus_easyui_macros::{render_component, include_css};
 use reusable::{reusable, reuse};
 
 #[derive(PartialEq, Debug, Clone, Copy)]
@@ -21,7 +21,7 @@ impl Theme {
     /// Returns CSS style corresponding to the current theme
     fn to_style(self) -> &'static str {
         match self {
-            Theme::Adwaita => include_str!("../styles/adwaita.css"),
+            Theme::Adwaita => include_css!("styles/adwaita.css"),
             Theme::Qt => todo!(),
             Theme::Windows10 => todo!(),
             Theme::Windows11 => todo!(),

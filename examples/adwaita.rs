@@ -2,18 +2,20 @@
 
 use dioxus::prelude::*;
 use dioxus_easyui::{Button, ButtonStyle, InitEasyGui, List, Theme, H1, H2, H3, H4};
+use dioxus_easyui_macros::include_css;
 
 fn main() {
     dioxus_desktop::launch(App);
 }
 
 fn App(cx: Scope) -> Element {
-    cx.render(rsx! {
-        // Include useful classes from Tailwind, not needed
-        style { include_str!("tailwind.css") }
-
+    render! {
+        // Include useful classes for the example
+        style { include_css!("examples/index.css") }
+        
         // Example starts here
         InitEasyGui { theme: Theme::Adwaita } // Important: You MUST initialize EasyGui
+        
         div { class: "easygui-example-root",
             // Headers
             div {
@@ -56,5 +58,5 @@ fn App(cx: Scope) -> Element {
                 
             }
         }
-    })
+    }
 }

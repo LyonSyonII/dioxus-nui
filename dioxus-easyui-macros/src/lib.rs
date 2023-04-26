@@ -1,3 +1,4 @@
+use css_minify::optimizations::Level;
 use proc_macro::TokenStream;
 
 /// Renders component calling [`dioxus::prelude::render!`](dioxus::prelude::render) and adds [Global Attributes and Global Events](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes) to it.
@@ -104,4 +105,58 @@ pub fn render_component(input: TokenStream) -> TokenStream {
     format!("dioxus::prelude::render! {{ {input} }}")
         .parse()
         .unwrap()
+}
+
+/// Same as [`include_str!`](https://doc.rust-lang.org/std/macro.include_str.html) but minifies the included CSS.
+/// 
+/// The path used is the root of the crate (not the file like `include_str!`).
+/// 
+/// Uses the [css-minify](https://crates.io/crates/css-minify) crate on Level 3.
+/// 
+/// If the CSS does not work properly, use the [`include_css_safe`](include_css_safe) macro.
+/// 
+/// # Example
+/// ```
+/// render! {
+///     // File is located in $crate_root/styles/index.css
+///     style { include_css!("styles/index.css") }
+/// }
+/// ```
+#[proc_macro]
+pub fn include_css(input: TokenStream) -> TokenStream {
+    let path = {
+        let input = input.to_string().replace('"', " ");
+        std::path::PathBuf::from(input.trim())
+    };
+    let input = std::fs::read_to_string(path).unwrap();
+    let out = css_minify::optimizations::Minifier::default().minify(&input, Level::Three).unwrap();
+    
+    format!("{out:?}").parse().unwrap()
+}
+
+/// Same as [`include_str!`](https://doc.rust-lang.org/std/macro.include_str.html) but minifies the included CSS.
+/// 
+/// The path used is the root of the crate (not the file like `include_str!`).
+/// 
+/// Uses the [css-minify](https://crates.io/crates/css-minify) crate on Level 1.
+/// 
+/// Use if the CSS did not work properly with the [`include_css`](include_css) macro.
+/// 
+/// # Example
+/// ```
+/// render! {
+///     // File is located in $crate_root/styles/index.css
+///     style { include_css!("styles/index.css") }
+/// }
+/// ```
+#[proc_macro]
+pub fn include_css_safe(input: TokenStream) -> TokenStream {
+    let path = {
+        let input = input.to_string().replace('"', " ");
+        std::path::PathBuf::from(input.trim())
+    };
+    let input = std::fs::read_to_string(path).unwrap();
+    let out = css_minify::optimizations::Minifier::default().minify(&input, Level::One).unwrap();
+    
+    format!("{out:?}").parse().unwrap()
 }
