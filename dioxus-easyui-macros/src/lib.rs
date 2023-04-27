@@ -1,25 +1,41 @@
+use std::mem::replace;
+
 use css_minify::optimizations::Level;
 use proc_macro::TokenStream;
 
-/// Renders component calling [`dioxus::prelude::render!`](dioxus::prelude::render) and adds [Global Attributes and Global Events](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes) to it.
-///
+/// Renders component calling [`dioxus::prelude::render!`](dioxus::prelude::render) and adds all [Global Attributes and Global Events](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes) to it.
+/// 
+/// If `$CLASS` is specified, the "class" attribute will be automatically appended.
+/// 
+/// If `$CHILDREN` is specified, `children` will be added to the end of the element.
 /// # Example:
 /// ```
-/// render! {
-///     button {
+/// render_component! {
+///     button { 
+///         // Same as 'class: "custom-class {class}"'
+///         $CLASS: "custom-class",
 ///         // Specific attributes
 ///         disabled: "true",
 ///         // Globals Substitution
 ///         $GLOBALS,
 ///         // Children
-///         "Button"
+///         "Button",
+///         // Same as 'cx.props.children'
+///         $CHILDREN
 ///     }
 /// }
 /// ```
+/// 
+/// # $CLASS
+/// Will append automatically to the class of the element:
+/// - User-specified `class` attribute
+/// - `accent` attribute
+/// 
+/// `$CLASS` *must* be followed by a trailing comma.
 #[proc_macro]
 pub fn render_component(input: TokenStream) -> TokenStream {
     // Add globals to Component
-    let input = input.to_string().replace(
+    let mut input = input.to_string().replace(
         "$GLOBALS",
         r#"
         accesskey: cx.props.accesskey,
@@ -101,6 +117,27 @@ pub fn render_component(input: TokenStream) -> TokenStream {
         onvolumechange: move |e| cx.props.onvolumechange.call(e),
         onwaiting: move |e| cx.props.onwaiting.call(e)"#
     );
+    
+    replace_single(&mut input, "$CHILDREN", "&cx.props.children");
+    
+    let class_token = "$CLASS";
+    if let Some(i) = input.find(class_token) {
+        let error: &str = "Expected $CLASS: \"...\",";
+
+        input.replace_range(i..i+class_token.len(), "class");
+        // Get start of "
+        let start = input.get(i..).and_then(|input| input.find('"').map(|s| s + i + 1)).expect(error);
+        // Get end of "
+        let end = input.get(start..).and_then(|input| input.find(',').map(|e| e + start - 2)).expect(error);
+        let class = input.get(start..=end).unwrap();
+        
+        let props_accent = "{cx.props.accent.then(|| \\\"accent\\\").unwrap_or_default()}";
+        let props_class = "{cx.props.class.unwrap_or_default()}";
+
+        input.replace_range(start..end+1, &format!("{class} {props_accent} {props_class}"));
+    }
+
+    // panic!("{input}");
 
     format!("dioxus::prelude::render! {{ {input} }}")
         .parse()
@@ -159,4 +196,15 @@ pub fn include_css_safe(input: TokenStream) -> TokenStream {
     let out = css_minify::optimizations::Minifier::default().minify(&input, Level::One).unwrap();
     
     format!("{out:?}").parse().unwrap()
+}
+
+/// Replaces the first match with another string.
+/// 
+/// Returns Some if it was replaced, and None if not.
+fn replace_single(string: &mut String, from: &str, to: &str) -> Option<()> {
+    let start = string.find(from)?;
+    let end = start + from.len();
+    string.replace_range(start..end, to);
+
+    Some(())
 }

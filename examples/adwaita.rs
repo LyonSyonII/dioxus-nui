@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::*;
-use dioxus_easyui::{Button, ButtonStyle, InitEasyGui, List, Theme, H1, H2, H3, H4};
-use dioxus_easyui_macros::include_css;
+use dioxus_easyui::prelude::include_css;
+use dioxus_easyui::{Button, ButtonStyle, InitEasyGui, List, ListItem, Theme, H1, H2, H3, H4};
 
 fn main() {
     dioxus_desktop::launch(App);
@@ -12,15 +12,16 @@ fn App(cx: Scope) -> Element {
     render! {
         // Include useful classes for the example
         style { include_css!("examples/index.css") }
-        
+
         // Example starts here
         InitEasyGui { theme: Theme::Adwaita } // Important: You MUST initialize EasyGui
-        
+
         div { class: "easygui-example-root",
             // Headers
             div {
                 H1 {
                     "Title 1",
+                    accent: true
                 }
                 H2 {
                     "Title 2"
@@ -41,6 +42,15 @@ fn App(cx: Scope) -> Element {
                     "Regular"
                 }
                 Button {
+                    "Accent",
+                    accent: true,
+                }
+                Button {
+                    "Disabled",
+                    disabled: true,
+                    onclick: move |_| println!("Should not print anything"),
+                }
+                Button {
                     button_style: ButtonStyle::Compact,
                     "Compact"
                 }
@@ -55,7 +65,14 @@ fn App(cx: Scope) -> Element {
             }
 
             List {
-                
+                ListItem {
+                    title: "Item 1",
+                    subtitle: "Subtitle 1"
+                }
+                ListItem {
+                    title: "Item 2",
+                    subtitle: "Subtitle 2"
+                }
             }
         }
     }

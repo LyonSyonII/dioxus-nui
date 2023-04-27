@@ -18,35 +18,25 @@
 .easygui-btn {
   background-color: var(--element-color);
   font-weight: 700;
-  color: rgb(255 255 255);
-  transition-property: color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  color: var(--text-color);
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
 }
 
-.easygui-btn:hover {
+.easygui-btn:hover:enabled {
   background-color: var(--element-hover-color);
 }
 
-.easygui-btn.accent:hover {
-  background-color: var(--accent-hover-color);
-}
-
-.easygui-btn:active {
+.easygui-btn:active:enabled {
   background-color: var(--element-active-color);
 }
 
-.easygui-btn.accent:active {
-  background-color: var(--accent-active-color);
+.easygui-btn:disabled {
+  opacity: 50%;
 }
 
-.easygui-btn.accent {
-  background-color: var(--accent-color);
-}
-
-.easygui-btn-regular {
+.easygui-btn--regular {
   border: 0;
   border-radius: 0.375rem;
   padding-top: 0.5rem;
@@ -55,7 +45,7 @@
   padding-right: 2rem;
 }
 
-.easygui-btn-compact {
+.easygui-btn--compact {
   border: 0;
   border-radius: 0.375rem;
   padding-left: 0.75rem;
@@ -64,7 +54,7 @@
   padding-bottom: 0.5rem;
 }
 
-.easygui-btn-pill {
+.easygui-btn--pill {
   border: 0;
   border-radius: 1.5rem;
   padding-left: 2rem;
@@ -73,7 +63,7 @@
   padding-bottom: 0.5rem;
 }
 
-.easygui-btn-circular {
+.easygui-btn--circular {
   border: 0;
   border-radius: 9999px;
   padding-left: 0.8rem;
@@ -88,28 +78,28 @@
   font-size: 1.875rem;
   font-weight: 1000;
   line-height: 2.5rem;
-  color: rgb(255 255 255);
+  color: var(--text-color);
 }
 
 .easygui-h2 {
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 2rem;
-  color: rgb(255 255 255);
+  color: var(--text-color);
 }
 
 .easygui-h3 {
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 2rem;
-  color: rgb(255 255 255);
+  color: var(--text-color);
 }
 
 .easygui-h4 {
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 2rem;
-  color: rgb(255 255 255);
+  color: var(--text-color);
 }
 
 /* LISTS */
@@ -117,34 +107,54 @@
 .easygui-list {
   display: flex;
   flex-direction: column;
+  gap: 1px;
 }
 
-.easygui-list > :not([hidden]) ~ :not([hidden]) {
-  --tw-divide-y-reverse: 0;
-  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
-  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
-  border-color: var(--background-color);
-}
-
-.easygui-list-item {
+.easygui-list__item {
   min-width: -moz-fit-content;
   min-width: fit-content;
   background-color: var(--element-color);
   padding: 0.75rem;
-  font-weight: 500;
-  color: rgb(255 255 255);
 }
 
-.easygui-list-item:first-child {
+.easygui-list__item:first-child {
   border-top-left-radius: 0.375rem;
   border-top-right-radius: 0.375rem;
 }
 
-.easygui-list-item:last-child {
+.easygui-list__item:last-child {
   border-bottom-right-radius: 0.375rem;
   border-bottom-left-radius: 0.375rem;
 }
 
-.easygui-list-item:empty {
+.easygui-list__item:empty {
   display: none;
+}
+
+.easygui-list__item__title {
+  font-weight: 500;
+  color: var(--text-color)
+}
+
+.easygui-list__item__subtitle {
+  font-weight: 500;
+  color: var(--text-color)
+}
+
+/* GENERAL */
+.accent {
+  background-color: var(--accent-color);
+}
+
+.accent:hover:enabled {
+  background-color: var(--accent-hover-color);
+}
+
+.accent:active:enabled {
+  background-color: var(--accent-active-color);
+}
+
+h1.accent, h2.accent, h3.accent, h4.accent {
+  background-color: unset;
+  color: var(--accent-color);
 }

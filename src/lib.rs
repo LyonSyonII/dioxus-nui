@@ -1,11 +1,11 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::{
-    dioxus_elements, inline_props, render, DragEvent, Element, EventHandler, FocusEvent, FormEvent,
-    GlobalAttributes as GA, ImageEvent, KeyboardEvent, MediaEvent, MouseEvent, Props, Scope,
-    ScrollEvent, SelectionEvent, ToggleEvent,
+    dioxus_elements, inline_props, render, rsx, DragEvent, Element, EventHandler, FocusEvent,
+    FormEvent, GlobalAttributes as GA, ImageEvent, KeyboardEvent, MediaEvent, MouseEvent, Props,
+    Scope, ScrollEvent, SelectionEvent, ToggleEvent, VNode,
 };
-use dioxus_easyui_macros::{render_component, include_css};
+use dioxus_easyui_macros::render_component;
 use reusable::{reusable, reuse};
 
 #[derive(PartialEq, Debug, Clone, Copy)]
@@ -21,7 +21,16 @@ impl Theme {
     /// Returns CSS style corresponding to the current theme
     fn to_style(self) -> &'static str {
         match self {
-            Theme::Adwaita => include_css!("styles/adwaita.css"),
+            Theme::Adwaita => {
+                // On debug mode include CSS without any modification
+                #[cfg(debug_assertions)] {
+                    include_str!("../styles/adwaita.css")
+                }
+                // On release mode include it minified
+                #[cfg(not(debug_assertions))] {
+                    dioxus_easyui_macros::include_css!("styles/adwaita.css")
+                }
+            }
             Theme::Qt => todo!(),
             Theme::Windows10 => todo!(),
             Theme::Windows11 => todo!(),
@@ -149,6 +158,12 @@ struct GlobalAttributes<'a> {
     /// Specifies whether the element's attribute values and the values of its Text node children are to be translated when the page is localized.
     #[props(into)]
     translate: Option<&'a str>,
+
+    // SPECIFIC TO EASYGUI
+
+    /// Sets accent, will work with most elements.
+    #[props(default)]
+    accent: bool
 }
 
 #[allow(dead_code)]
@@ -323,10 +338,10 @@ pub enum ButtonStyle {
 impl std::fmt::Display for ButtonStyle {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let d = match self {
-            ButtonStyle::Regular => "easygui-btn-regular",
-            ButtonStyle::Compact => "easygui-btn-compact",
-            ButtonStyle::Pill => "easygui-btn-pill",
-            ButtonStyle::Circular => "easygui-btn-circular",
+            ButtonStyle::Regular => "easygui-btn--regular",
+            ButtonStyle::Compact => "easygui-btn--compact",
+            ButtonStyle::Pill => "easygui-btn--pill",
+            ButtonStyle::Circular => "easygui-btn--circular",
         };
 
         f.write_str(d)
@@ -337,11 +352,9 @@ impl std::fmt::Display for ButtonStyle {
 #[derive(Props)]
 pub struct ButtonProps<'a> {
     children: Element<'a>,
-
+    
     // Attributes
     disabled: Option<bool>,
-    #[props(default)]
-    accent: bool,
 
     // Custom properties
     #[props(default)]
@@ -350,27 +363,19 @@ pub struct ButtonProps<'a> {
 
 pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
     let ButtonProps {
-        class,
-        children,
         button_style,
-        accent,
         disabled,
         ..
     } = cx.props;
-
-    let accent = if *accent { "accent" } else { "" };
-    let class = class.unwrap_or_default();
-    let disabled = disabled.map(|b| if b { "true" } else { "false" });
-
+    
     render_component! {
         button {
-            class: "easygui-btn {button_style} {accent} {class}",
+            $CLASS: "easygui-btn {button_style}",
 
-            disabled: disabled,
+            disabled: disabled.to_str(),
 
             $GLOBALS,
-
-            children
+            $CHILDREN
         }
     }
 }
@@ -384,60 +389,56 @@ pub struct HeaderProps<'a> {
 
 pub fn H1<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
     let HeaderProps {
-        class, children, ..
+        ..
     } = cx.props;
-
-    let class = class.unwrap_or_default();
-
+    
     render_component! {
         h1 {
-            class: "easygui-h1 {class}",
-
+            $CLASS: "easygui-h1",
             $GLOBALS,
-
-            children
+            $CHILDREN
         }
     }
 }
 
 pub fn H2<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
     let HeaderProps {
-        class, children, ..
+        ..
     } = cx.props;
-
-    let class = class.unwrap_or_default();
-
-    render! {
-        h1 { class: "easygui-h2 {class}",
-            children
+    
+    render_component! {
+        h1 {
+            $CLASS: "easygui-h2",
+            $GLOBALS,
+            $CHILDREN
         }
     }
 }
 
 pub fn H3<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
     let HeaderProps {
-        class, children, ..
+        ..
     } = cx.props;
-
-    let class = class.unwrap_or_default();
-
-    render! {
-        h1 { class: "easygui-h3 {class}",
-            children
+    
+    render_component! {
+        h1 {
+            $CLASS: "easygui-h3",
+            $GLOBALS,
+            $CHILDREN
         }
     }
 }
 
 pub fn H4<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
     let HeaderProps {
-        class, children, ..
+        ..
     } = cx.props;
-
-    let class = class.unwrap_or_default();
-
-    render! {
-        h1 { class: "easygui-h4 {class}",
-            children
+    
+    render_component! {
+        h1 {
+            $CLASS: "easygui-h4",
+            $GLOBALS,
+            $CHILDREN
         }
     }
 }
@@ -450,14 +451,19 @@ pub struct ListProps<'a> {
 
 /// Creates a List of items.
 ///
-/// To work properly, use the [`ListItem`](crate::ListItem) component. If another element is used the result is unspecified.
+/// To work properly, use the [`ListItem`](crate::ListItem) component.
+///
+/// If another element is used the result is unspecified.
 pub fn List<'a>(cx: Scope<'a, ListProps<'a>>) -> Element {
-    let ListProps { children, .. } = cx.props;
-
-    // TODO! Add $GLOBALS
-    render! {
-        div {
-            children
+    let ListProps {
+        ..
+    } = cx.props;
+    
+    render_component! {
+        div { 
+            $CLASS: "easygui-list",
+            $GLOBALS,
+            $CHILDREN
         }
     }
 }
@@ -467,8 +473,8 @@ pub fn List<'a>(cx: Scope<'a, ListProps<'a>>) -> Element {
 pub struct ListItemProps<'a> {
     title: Option<&'a str>,
     subtitle: Option<&'a str>,
-    suffix: Element<'a>,
-    prefix: Element<'a>,
+    suffix: Option<VNode<'a>>,
+    prefix: Option<VNode<'a>>,
 }
 
 /// Creates a new item for a [`List`](crate::List).
@@ -476,20 +482,32 @@ pub struct ListItemProps<'a> {
 /// Use only nested in a `List` element.
 pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
     let ListItemProps {
-        class,
         title,
         subtitle,
         suffix,
         prefix,
         ..
     } = cx.props;
+    
+    render_component! {
+        div { 
+            $CLASS: "easygui-list__item",
+            $GLOBALS,
+            if let Some(title) = *title {
+                rsx! {
+                    p { class: "easygui-list__item__title",
+                        title
+                    }
+                }
+            }
 
-    let class = class.unwrap_or_default();
-
-    // TODO! Add $GLOBALS
-    render! {
-        div { class: " {class}"
-            
+            if let Some(subtitle) = *subtitle {
+                rsx! {
+                    p { class: "easygui-list__item__subtitle",
+                        subtitle
+                    }
+                }
+            }
         }
     }
 }
@@ -497,14 +515,40 @@ pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
 /// Re-export of all the elements with the same name as the [`dioxus`](dioxus::prelude::dioxus_elements) ones.
 ///
 /// Useful if you want to replace all of them without having to change the names.
-/// 
+///
 /// All components unique to dioxus-easyui (for example [`List`](crate::List)) will remain with the same name.
-mod prelude {
+pub mod prelude {
     pub use crate::Button as button;
+    pub use crate::List;
+    pub use crate::ListItem;
     pub use crate::H1 as h1;
     pub use crate::H2 as h2;
     pub use crate::H3 as h3;
     pub use crate::H4 as h4;
-    pub use crate::List;
-    pub use crate::ListItem;
+    pub use dioxus_easyui_macros::include_css;
+    pub use dioxus_easyui_macros::include_css_safe;
+}
+
+// UTILS
+trait BoolUtils {
+    type StrOut;
+    fn to_str(self) -> Self::StrOut;
+}
+
+impl BoolUtils for bool {
+    type StrOut = &'static str;
+    fn to_str(self) -> Self::StrOut {
+        if self {
+            "true"
+        } else {
+            "false"
+        }
+    }
+}
+
+impl<T> BoolUtils for Option<T> where T: BoolUtils {
+    type StrOut = Option<T::StrOut>;
+    fn to_str(self) -> Self::StrOut {
+        self.map(|b| b.to_str())
+    }
 }
