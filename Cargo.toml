@@ -1,5 +1,5 @@
 [package]
-name = "dioxus-easyui"
+name = "dioxus-nui"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,7 +7,7 @@ edition = "2021"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus" }
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus" }
 reusable = "0.1.0"
-dioxus-easyui-macros = { path = "dioxus-easyui-macros" }
+dioxus-nui-macros = { path = "dioxus-nui-macros" }
 
 [dev-dependencies]
 

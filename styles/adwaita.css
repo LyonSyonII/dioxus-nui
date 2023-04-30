@@ -1,4 +1,3 @@
-
 /* Tailwind Playground: https://play.tailwindcss.com/Eggks5jAOa?size=832x720 */
 
 :root {
@@ -58,7 +57,7 @@ html {
 
 /* BUTTONS */
 
-.easygui-btn {
+.nui-btn {
   /* Reset default properties */
   text-transform: none;
   font-family: inherit;
@@ -78,19 +77,19 @@ html {
   transition-duration: 200ms;
 }
 
-.easygui-btn:hover:enabled {
+.nui-btn:hover:enabled {
   background-color: var(--element-hover-color);
 }
 
-.easygui-btn:active:enabled {
+.nui-btn:active:enabled {
   background-color: var(--element-active-color);
 }
 
-.easygui-btn:disabled {
+.nui-btn:disabled {
   opacity: 50%;
 }
 
-.easygui-btn--regular {
+.nui-btn--regular {
   border: 0;
   border-radius: 0.375rem;
   padding-top: 0.5rem;
@@ -99,7 +98,7 @@ html {
   padding-right: 2rem;
 }
 
-.easygui-btn--compact {
+.nui-btn--compact {
   border: 0;
   border-radius: 0.375rem;
   padding-left: 0.75rem;
@@ -108,7 +107,7 @@ html {
   padding-bottom: 0.5rem;
 }
 
-.easygui-btn--pill {
+.nui-btn--pill {
   border: 0;
   border-radius: 1.5rem;
   padding-left: 2rem;
@@ -117,7 +116,7 @@ html {
   padding-bottom: 0.5rem;
 }
 
-.easygui-btn--circular {
+.nui-btn--circular {
   width: min-content;
   border-radius: 9999px;
   padding-left: 1rem;
@@ -128,7 +127,7 @@ html {
 
 /* HEADERS */
 
-.easygui-h1 {
+.nui-h1 {
   margin: 0;
   font-size: 1.875rem;
   font-weight: 1000;
@@ -136,7 +135,7 @@ html {
   color: var(--text-color);
 }
 
-.easygui-h2 {
+.nui-h2 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 800;
@@ -144,7 +143,7 @@ html {
   color: var(--text-color);
 }
 
-.easygui-h3 {
+.nui-h3 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 500;
@@ -152,7 +151,7 @@ html {
   color: var(--text-color);
 }
 
-.easygui-h4 {
+.nui-h4 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 500;
@@ -162,39 +161,47 @@ html {
 
 /* LISTS */
 
-.easygui-list {
+.nui-list {
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
 
-.easygui-list__item {
+.nui-list__item {
   min-width: -moz-fit-content;
   min-width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: var(--element-color);
-  padding: 0.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 500;
+  color: var(--text-color);
 }
 
-.easygui-list__item:first-child {
+.nui-list__item:first-child {
   border-top-left-radius: 0.375rem;
   border-top-right-radius: 0.375rem;
 }
 
-.easygui-list__item:last-child {
+.nui-list__item:last-child {
   border-bottom-right-radius: 0.375rem;
   border-bottom-left-radius: 0.375rem;
 }
 
-.easygui-list__item:empty {
+.nui-list__item:empty {
   display: none;
 }
 
-.easygui-list__item__title {
+.nui-list__item__title {
   margin: 0;
   color: var(--text-color);
 }
 
-.easygui-list__item__subtitle {
+.nui-list__item__subtitle {
   margin: 0;
   font-size: 0.75rem;
   line-height: 1rem;
@@ -214,7 +221,10 @@ html {
   background-color: var(--accent-active-color);
 }
 
-h1.accent, h2.accent, h3.accent, h4.accent {
+h1.accent,
+h2.accent,
+h3.accent,
+h4.accent {
   background-color: unset;
   color: var(--accent-color);
 }

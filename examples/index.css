@@ -1,4 +1,4 @@
-.easygui-example-root {
+.nui-example-root {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,14 +7,19 @@
     padding-bottom: 0.5rem;
 }
 
-.easygui-example-buttongrid {
+.nui-example-buttongrid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     justify-items: center;
     gap: 0.75rem;
+    width: 50%;
 }
 
-.easygui-example-list {
+.nui-example-list {
     padding-top: 0.25rem;
     width: 50%;
+}
+
+.nui-example-title {
+
 }

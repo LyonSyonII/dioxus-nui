@@ -150,6 +150,7 @@ pub fn render_component(input: TokenStream) -> TokenStream {
 /// 
 /// If the CSS does not work properly, use the [`include_css_safe`](include_css_safe) macro.
 /// 
+/// 
 /// # Example
 /// ```
 /// render! {
@@ -157,16 +158,27 @@ pub fn render_component(input: TokenStream) -> TokenStream {
 ///     style { include_css!("styles/index.css") }
 /// }
 /// ```
+/// 
+/// # Notes
+/// In debug mode, the CSS will be imported with the regular [`include_str!`](https://doc.rust-lang.org/std/macro.include_str.html) to allow for recompilation on file changes.
+/// 
+/// The path will still be from the root of the crate.
 #[proc_macro]
 pub fn include_css(input: TokenStream) -> TokenStream {
-    let path = {
-        let input = input.to_string().replace('"', " ");
-        std::path::PathBuf::from(input.trim())
-    };
-    let input = std::fs::read_to_string(path).unwrap();
-    let out = css_minify::optimizations::Minifier::default().minify(&input, Level::Three).unwrap();
-    
-    format!("{out:?}").parse().unwrap()
+    let input = input.to_string();
+    // Get input trimmed and without "
+    let input = &input.trim()[1..input.len()-1];
+    #[cfg(debug_assertions)] {
+        format!("include_str!(\"../{input}\")").parse().unwrap()
+    }
+
+    #[cfg(not(debug_assertions))] {
+        let path = std::path::PathBuf::from(input);
+        let input = std::fs::read_to_string(path).unwrap();
+        let out = css_minify::optimizations::Minifier::default().minify(&input, Level::Three).unwrap();
+        
+        format!("{out:?}").parse().unwrap()
+    }
 }
 
 /// Same as [`include_str!`](https://doc.rust-lang.org/std/macro.include_str.html) but minifies the included CSS.

@@ -5,7 +5,7 @@ use dioxus::prelude::{
     FormEvent, GlobalAttributes as GA, ImageEvent, KeyboardEvent, MediaEvent, MouseEvent, Props,
     Scope, ScrollEvent, SelectionEvent, ToggleEvent, VNode,
 };
-use dioxus_easyui_macros::render_component;
+use dioxus_nui_macros::render_component;
 use reusable::{reusable, reuse};
 
 #[derive(PartialEq, Debug, Clone, Copy)]
@@ -21,18 +21,7 @@ impl Theme {
     /// Returns CSS style corresponding to the current theme
     fn to_style(self) -> &'static str {
         match self {
-            Theme::Adwaita => {
-                // On debug mode include CSS without any modification
-                #[cfg(debug_assertions)]
-                {
-                    include_str!("../styles/adwaita.css")
-                }
-                // On release mode include it minified
-                #[cfg(not(debug_assertions))]
-                {
-                    dioxus_easyui_macros::include_css!("styles/adwaita.css")
-                }
-            }
+            Theme::Adwaita => dioxus_nui_macros::include_css!("styles/adwaita.css"),
             Theme::Qt => todo!(),
             Theme::Windows10 => todo!(),
             Theme::Windows11 => todo!(),
@@ -63,7 +52,7 @@ impl Default for Theme {
 }
 
 #[inline_props]
-pub fn InitEasyGui(cx: Scope, theme: Option<Theme>) -> Element {
+pub fn InitNui(cx: Scope, theme: Option<Theme>) -> Element {
     render! {
         style {
             theme.unwrap_or_default().to_style()
@@ -160,7 +149,7 @@ struct GlobalAttributes<'a> {
     #[props(into)]
     translate: Option<&'a str>,
 
-    // SPECIFIC TO EASYGUI
+    // SPECIFIC TO NUI
     /// Sets accent, will work with most elements.
     #[props(default)]
     accent: bool,
@@ -338,10 +327,10 @@ pub enum ButtonStyle {
 impl std::fmt::Display for ButtonStyle {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let d = match self {
-            ButtonStyle::Regular => "easygui-btn--regular",
-            ButtonStyle::Compact => "easygui-btn--compact",
-            ButtonStyle::Pill => "easygui-btn--pill",
-            ButtonStyle::Circular => "easygui-btn--circular",
+            ButtonStyle::Regular => "nui-btn--regular",
+            ButtonStyle::Compact => "nui-btn--compact",
+            ButtonStyle::Pill => "nui-btn--pill",
+            ButtonStyle::Circular => "nui-btn--circular",
         };
 
         f.write_str(d)
@@ -370,7 +359,7 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
 
     render_component! {
         button {
-            $CLASS: "easygui-btn {button_style}",
+            $CLASS: "nui-btn {button_style}",
 
             disabled: disabled.to_str(),
 
@@ -392,7 +381,7 @@ pub fn H1<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 
     render_component! {
         h1 {
-            $CLASS: "easygui-h1",
+            $CLASS: "nui-h1",
             $GLOBALS,
             $CHILDREN
         }
@@ -404,7 +393,7 @@ pub fn H2<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 
     render_component! {
         h1 {
-            $CLASS: "easygui-h2",
+            $CLASS: "nui-h2",
             $GLOBALS,
             $CHILDREN
         }
@@ -416,7 +405,7 @@ pub fn H3<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 
     render_component! {
         h1 {
-            $CLASS: "easygui-h3",
+            $CLASS: "nui-h3",
             $GLOBALS,
             $CHILDREN
         }
@@ -428,7 +417,7 @@ pub fn H4<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 
     render_component! {
         h1 {
-            $CLASS: "easygui-h4",
+            $CLASS: "nui-h4",
             $GLOBALS,
             $CHILDREN
         }
@@ -451,7 +440,7 @@ pub fn List<'a>(cx: Scope<'a, ListProps<'a>>) -> Element {
 
     render_component! {
         div {
-            $CLASS: "easygui-list",
+            $CLASS: "nui-list",
             $GLOBALS,
             $CHILDREN
         }
@@ -461,9 +450,30 @@ pub fn List<'a>(cx: Scope<'a, ListProps<'a>>) -> Element {
 #[reuse(global_attributes, global_events)]
 #[derive(Props)]
 pub struct ListItemProps<'a> {
+    /// Title of the list item.
     title: Option<&'a str>,
+
+    /// Class of the title, useful if you want to change its style.
+    title_class: Option<&'a str>,
+
+    /// Subtitle of the list item.
     subtitle: Option<&'a str>,
+
+    /// Class of the subtitle, useful if you want to change its style.
+    subtitle_class: Option<&'a str>,
+
+    /// Suffix of the list item.
+    ///
+    /// Can be any element.
+    ///
+    /// It will be positioned at the left side of the item.
     suffix: Option<VNode<'a>>,
+
+    /// Prefix of the list item.
+    ///
+    /// Can be any element.
+    ///
+    /// It will be positioned at the right side of the item.
     prefix: Option<VNode<'a>>,
 }
 
@@ -479,17 +489,21 @@ pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
         ..
     } = cx.props;
 
-    let title = title.map(|t| rsx! {
-        p { class: "easygui-list__item__title", t }
+    let title = title.map(|t| {
+        rsx! {
+            p { class: "nui-list__item__title", t }
+        }
     });
-    
-    let subtitle = subtitle.map(|t| rsx! {
-        p { class: "easygui-list__item__subtitle", t }
+
+    let subtitle = subtitle.map(|t| {
+        rsx! {
+            p { class: "nui-list__item__subtitle", t }
+        }
     });
-    
+
     render_component! {
         div {
-            $CLASS: "easygui-list__item",
+            $CLASS: "nui-list__item",
             $GLOBALS,
             title,
             subtitle,
@@ -501,7 +515,7 @@ pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
 ///
 /// Useful if you want to replace all of them without having to change the names.
 ///
-/// All components unique to dioxus-easyui (for example [`List`](crate::List)) will remain with the same name.
+/// All components unique to dioxus-nui (for example [`List`](crate::List)) will remain with the same name.
 pub mod prelude {
     pub use crate::Button as button;
     pub use crate::List;
@@ -510,8 +524,8 @@ pub mod prelude {
     pub use crate::H2 as h2;
     pub use crate::H3 as h3;
     pub use crate::H4 as h4;
-    pub use dioxus_easyui_macros::include_css;
-    pub use dioxus_easyui_macros::include_css_safe;
+    pub use dioxus_nui_macros::include_css;
+    pub use dioxus_nui_macros::include_css_safe;
 }
 
 // UTILS

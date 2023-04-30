@@ -1,23 +1,22 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::*;
-use dioxus_easyui::prelude::include_css;
-use dioxus_easyui::{Button, ButtonStyle, InitEasyGui, List, ListItem, Theme, H1, H2, H3, H4};
+use dioxus_nui::prelude::include_css;
+use dioxus_nui::{Button, ButtonStyle, InitNui, List, ListItem, Theme, H1, H2, H3, H4};
 
 fn main() {
     // hot_reload_init!(dioxus_hot_reload::Config::new().with_paths(&["src", "examples", "styles"]).with_rebuild_command("cargo run --example adwaita"));
     dioxus_desktop::launch(App);
 }
-
 fn App(cx: Scope) -> Element {
     render! {
         // Include useful classes for the example
-        style { include_str!("../examples/index.css") }
+        style { include_css!("examples/index.css") }
 
         // Example starts here
-        InitEasyGui { theme: Theme::Adwaita } // Important: You MUST initialize EasyGui
+        InitNui { theme: Theme::Adwaita } // Important: You MUST initialize NUI
 
-        div { class: "easygui-example-root",
+        div { class: "nui-example-root",
             // Headers
             div {
                 H1 {
@@ -36,7 +35,7 @@ fn App(cx: Scope) -> Element {
             }
 
             // Buttons
-            div { class: "easygui-example-buttongrid",
+            div { class: "nui-example-buttongrid",
                 Button {
                     button_style: ButtonStyle::Regular,
                     onclick: move |_| println!("It works!!!"),
@@ -65,7 +64,7 @@ fn App(cx: Scope) -> Element {
                 }
             }
 
-            List { class: "easygui-example-list",
+            List { class: "nui-example-list",
                 ListItem {
                     title: "Item 1",
                     subtitle: "Subtitle 1"
