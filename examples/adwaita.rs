@@ -14,65 +14,30 @@ fn App(cx: Scope) -> Element {
         style { include_css!("examples/index.css") }
 
         // Example starts here
-        InitNui { theme: Theme::Adwaita } // Important: You MUST initialize NUI
+        InitNui { theme: Theme::Adwaita }
 
         div { class: "nui-example-root",
             // Headers
             div {
-                H1 {
-                    "Title 1",
-                    accent: true
-                }
-                H2 {
-                    "Title 2"
-                }
-                H3 {
-                    "Title 3"
-                }
-                H4 {
-                    "Title 4"
-                }
+                H1 { accent: true, "Title 1" }
+                H2 { "Title 2" }
+                H3 { "Title 3" }
+                H4 { "Title 4" }
             }
 
             // Buttons
             div { class: "nui-example-buttongrid",
-                Button {
-                    button_style: ButtonStyle::Regular,
-                    onclick: move |_| println!("It works!!!"),
-                    "Regular"
-                }
-                Button {
-                    "Accent",
-                    accent: true,
-                }
-                Button {
-                    "Disabled",
-                    disabled: true,
-                    onclick: move |_| println!("Should not print anything"),
-                }
-                Button {
-                    button_style: ButtonStyle::Compact,
-                    "Compact"
-                }
-                Button {
-                    button_style: ButtonStyle::Pill,
-                    "Pill"
-                }
-                Button {
-                    button_style: ButtonStyle::Circular,
-                    "C"
-                }
+                Button { button_style: ButtonStyle::Regular, onclick: move |_| println!("It works!!!"), "Regular" }
+                Button { accent: true, "Accent" }
+                Button { disabled: true, onclick: move |_| println!("Should not print anything"), "Disabled" }
+                Button { button_style: ButtonStyle::Compact, "Compact" }
+                Button { button_style: ButtonStyle::Pill, "Pill" }
+                Button { button_style: ButtonStyle::Circular, "C" }
             }
 
             List { class: "nui-example-list",
-                ListItem {
-                    title: "Item 1",
-                    subtitle: "Subtitle 1"
-                }
-                ListItem {
-                    title: "Item 2",
-                    subtitle: "Subtitle 2"
-                }
+                ListItem { title: "Item 1", subtitle: "Subtitle 1" }
+                ListItem { title: "Item 2", subtitle: "Subtitle 2" }
             }
         }
     }

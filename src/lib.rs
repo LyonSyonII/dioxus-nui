@@ -54,9 +54,7 @@ impl Default for Theme {
 #[inline_props]
 pub fn InitNui(cx: Scope, theme: Option<Theme>) -> Element {
     render! {
-        style {
-            theme.unwrap_or_default().to_style()
-        }
+        style { theme.unwrap_or_default().to_style() }
     }
 }
 
@@ -361,7 +359,7 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
         button {
             $CLASS: "nui-btn {button_style}",
 
-            disabled: disabled.to_str(),
+            disabled: disabled.map_str(),
 
             $GLOBALS,
             $CHILDREN
@@ -483,7 +481,9 @@ pub struct ListItemProps<'a> {
 pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
     let ListItemProps {
         title,
+        title_class,
         subtitle,
+        subtitle_class,
         suffix,
         prefix,
         ..
@@ -491,13 +491,13 @@ pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
 
     let title = title.map(|t| {
         rsx! {
-            p { class: "nui-list__item__title", t }
+            p { class: "nui-list__item__title {title_class.unwrap_as_str()}", t }
         }
     });
 
     let subtitle = subtitle.map(|t| {
         rsx! {
-            p { class: "nui-list__item__subtitle", t }
+            p { class: "nui-list__item__subtitle {subtitle_class.unwrap_as_str()}", t }
         }
     });
 
@@ -529,15 +529,13 @@ pub mod prelude {
 }
 
 // UTILS
-trait BoolUtils {
-    type StrOut;
-    fn to_str(self) -> Self::StrOut;
+trait ToStr<'a> {
+    fn to_str(&self) -> &'a str;
 }
 
-impl BoolUtils for bool {
-    type StrOut = &'static str;
-    fn to_str(self) -> Self::StrOut {
-        if self {
+impl ToStr<'static> for bool {
+    fn to_str(&self) -> &'static str {
+        if *self {
             "true"
         } else {
             "false"
@@ -545,12 +543,50 @@ impl BoolUtils for bool {
     }
 }
 
-impl<T> BoolUtils for Option<T>
-where
-    T: BoolUtils,
-{
-    type StrOut = Option<T::StrOut>;
-    fn to_str(self) -> Self::StrOut {
+impl<'a> ToStr<'a> for &'a str {
+    fn to_str(&self) -> &'a str {
+        self
+    }
+}
+
+trait MapStr<'a> {
+    type StrOut;
+    fn map_str(self) -> Self::StrOut;
+}
+
+impl<'a, T: ToStr<'a>> MapStr<'a> for Option<T> {
+    type StrOut = Option<&'a str>;
+    fn map_str(self) -> Self::StrOut {
         self.map(|b| b.to_str())
+    }
+}
+
+impl<'a, T: ToStr<'a>, E> MapStr<'a> for Result<T, E> {
+    type StrOut = Result<&'a str, E>;
+    fn map_str(self) -> Self::StrOut {
+        self.map(|r| r.to_str())
+    }
+}
+
+trait UnwrapStr<'a> {
+    /// Returns value contained as `&str` or `""` if it's `Result::Error` or `Option::None`.
+    fn unwrap_as_str(&'a self) -> &'a str;
+}
+
+impl<'a, T: ToStr<'a>> UnwrapStr<'a> for Option<T> {
+    fn unwrap_as_str(&'a self) -> &'a str {
+        match &self {
+            Some(s) => s.to_str(),
+            None => "",
+        }
+    }
+}
+
+impl<'a, T: ToStr<'a>, E> UnwrapStr<'a> for Result<T, E> {
+    fn unwrap_as_str(&'a self) -> &'a str {
+        match &self {
+            Ok(ok) => ok.to_str(),
+            Err(_) => "",
+        }
     }
 }
