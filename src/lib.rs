@@ -23,11 +23,13 @@ impl Theme {
         match self {
             Theme::Adwaita => {
                 // On debug mode include CSS without any modification
-                #[cfg(debug_assertions)] {
+                #[cfg(debug_assertions)]
+                {
                     include_str!("../styles/adwaita.css")
                 }
                 // On release mode include it minified
-                #[cfg(not(debug_assertions))] {
+                #[cfg(not(debug_assertions))]
+                {
                     dioxus_easyui_macros::include_css!("styles/adwaita.css")
                 }
             }
@@ -71,7 +73,6 @@ pub fn InitEasyGui(cx: Scope, theme: Option<Theme>) -> Element {
 
 // Global Attributes & Events
 // Uses the [reusable](https://crates.io/crates/reusable) crate to add the global attributes to the built elements.
-
 #[allow(dead_code)]
 #[reusable(global_attributes)]
 #[derive(Props, PartialEq)]
@@ -160,10 +161,9 @@ struct GlobalAttributes<'a> {
     translate: Option<&'a str>,
 
     // SPECIFIC TO EASYGUI
-
     /// Sets accent, will work with most elements.
     #[props(default)]
-    accent: bool
+    accent: bool,
 }
 
 #[allow(dead_code)]
@@ -352,7 +352,7 @@ impl std::fmt::Display for ButtonStyle {
 #[derive(Props)]
 pub struct ButtonProps<'a> {
     children: Element<'a>,
-    
+
     // Attributes
     disabled: Option<bool>,
 
@@ -367,7 +367,7 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
         disabled,
         ..
     } = cx.props;
-    
+
     render_component! {
         button {
             $CLASS: "easygui-btn {button_style}",
@@ -388,10 +388,8 @@ pub struct HeaderProps<'a> {
 }
 
 pub fn H1<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
-    let HeaderProps {
-        ..
-    } = cx.props;
-    
+    let HeaderProps { .. } = cx.props;
+
     render_component! {
         h1 {
             $CLASS: "easygui-h1",
@@ -402,10 +400,8 @@ pub fn H1<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 }
 
 pub fn H2<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
-    let HeaderProps {
-        ..
-    } = cx.props;
-    
+    let HeaderProps { .. } = cx.props;
+
     render_component! {
         h1 {
             $CLASS: "easygui-h2",
@@ -416,10 +412,8 @@ pub fn H2<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 }
 
 pub fn H3<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
-    let HeaderProps {
-        ..
-    } = cx.props;
-    
+    let HeaderProps { .. } = cx.props;
+
     render_component! {
         h1 {
             $CLASS: "easygui-h3",
@@ -430,10 +424,8 @@ pub fn H3<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 }
 
 pub fn H4<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
-    let HeaderProps {
-        ..
-    } = cx.props;
-    
+    let HeaderProps { .. } = cx.props;
+
     render_component! {
         h1 {
             $CLASS: "easygui-h4",
@@ -455,12 +447,10 @@ pub struct ListProps<'a> {
 ///
 /// If another element is used the result is unspecified.
 pub fn List<'a>(cx: Scope<'a, ListProps<'a>>) -> Element {
-    let ListProps {
-        ..
-    } = cx.props;
-    
+    let ListProps { .. } = cx.props;
+
     render_component! {
-        div { 
+        div {
             $CLASS: "easygui-list",
             $GLOBALS,
             $CHILDREN
@@ -488,26 +478,21 @@ pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
         prefix,
         ..
     } = cx.props;
+
+    let title = title.map(|t| rsx! {
+        p { class: "easygui-list__item__title", t }
+    });
+    
+    let subtitle = subtitle.map(|t| rsx! {
+        p { class: "easygui-list__item__subtitle", t }
+    });
     
     render_component! {
-        div { 
+        div {
             $CLASS: "easygui-list__item",
             $GLOBALS,
-            if let Some(title) = *title {
-                rsx! {
-                    p { class: "easygui-list__item__title",
-                        title
-                    }
-                }
-            }
-
-            if let Some(subtitle) = *subtitle {
-                rsx! {
-                    p { class: "easygui-list__item__subtitle",
-                        subtitle
-                    }
-                }
-            }
+            title,
+            subtitle,
         }
     }
 }
@@ -546,7 +531,10 @@ impl BoolUtils for bool {
     }
 }
 
-impl<T> BoolUtils for Option<T> where T: BoolUtils {
+impl<T> BoolUtils for Option<T>
+where
+    T: BoolUtils,
+{
     type StrOut = Option<T::StrOut>;
     fn to_str(self) -> Self::StrOut {
         self.map(|b| b.to_str())

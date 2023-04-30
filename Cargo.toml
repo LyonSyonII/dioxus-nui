@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-dioxus = "0.3.2"
-dioxus-desktop = "0.3.0"
+dioxus = { git = "https://github.com/DioxusLabs/dioxus" }
+dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus" }
 reusable = "0.1.0"
 dioxus-easyui-macros = { path = "dioxus-easyui-macros" }
 

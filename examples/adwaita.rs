@@ -5,13 +5,14 @@ use dioxus_easyui::prelude::include_css;
 use dioxus_easyui::{Button, ButtonStyle, InitEasyGui, List, ListItem, Theme, H1, H2, H3, H4};
 
 fn main() {
+    // hot_reload_init!(dioxus_hot_reload::Config::new().with_paths(&["src", "examples", "styles"]).with_rebuild_command("cargo run --example adwaita"));
     dioxus_desktop::launch(App);
 }
 
 fn App(cx: Scope) -> Element {
     render! {
         // Include useful classes for the example
-        style { include_css!("examples/index.css") }
+        style { include_str!("../examples/index.css") }
 
         // Example starts here
         InitEasyGui { theme: Theme::Adwaita } // Important: You MUST initialize EasyGui
@@ -64,7 +65,7 @@ fn App(cx: Scope) -> Element {
                 }
             }
 
-            List {
+            List { class: "easygui-example-list",
                 ListItem {
                     title: "Item 1",
                     subtitle: "Subtitle 1"

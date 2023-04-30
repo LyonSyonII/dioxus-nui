@@ -1,5 +1,3 @@
-use std::mem::replace;
-
 use css_minify::optimizations::Level;
 use proc_macro::TokenStream;
 

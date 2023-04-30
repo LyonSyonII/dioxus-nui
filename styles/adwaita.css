@@ -1,8 +1,9 @@
 
-/* Tailwind Playground: https://play.tailwindcss.com/lKCnZsc1Ru?size=470x720&file=css */
+/* Tailwind Playground: https://play.tailwindcss.com/Eggks5jAOa?size=832x720 */
 
 :root {
   --text-color: #fff;
+  --text-secondary-color: #8B8B8B;
   --accent-color: #3584e4;
   --accent-hover-color: #5495e4;
   --accent-active-color: #8bb3e4;
@@ -13,9 +14,62 @@
   background-color: var(--background-color);
 }
 
+/*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  /* 1 */
+  border-width: 0;
+  /* 2 */
+  border-style: solid;
+  /* 2 */
+  border-color: #e5e7eb;
+  /* 2 */
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+*/
+html {
+  line-height: 1.5;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+  -moz-tab-size: 4;
+  /* 3 */
+  tab-size: 4;
+  /* 3 */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  /* 4 */
+  font-feature-settings: normal;
+  /* 5 */
+  font-variation-settings: normal;
+  /* 6 */
+}
+
 /* BUTTONS */
 
 .easygui-btn {
+  /* Reset default properties */
+  text-transform: none;
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+
+  /* Real properties */
   background-color: var(--element-color);
   font-weight: 700;
   color: var(--text-color);
@@ -64,10 +118,10 @@
 }
 
 .easygui-btn--circular {
-  border: 0;
+  width: min-content;
   border-radius: 9999px;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
@@ -75,6 +129,7 @@
 /* HEADERS */
 
 .easygui-h1 {
+  margin: 0;
   font-size: 1.875rem;
   font-weight: 1000;
   line-height: 2.5rem;
@@ -82,6 +137,7 @@
 }
 
 .easygui-h2 {
+  margin: 0;
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 2rem;
@@ -89,6 +145,7 @@
 }
 
 .easygui-h3 {
+  margin: 0;
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 2rem;
@@ -96,6 +153,7 @@
 }
 
 .easygui-h4 {
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 2rem;
@@ -114,7 +172,7 @@
   min-width: -moz-fit-content;
   min-width: fit-content;
   background-color: var(--element-color);
-  padding: 0.75rem;
+  padding: 0.5rem;
 }
 
 .easygui-list__item:first-child {
@@ -132,13 +190,15 @@
 }
 
 .easygui-list__item__title {
-  font-weight: 500;
-  color: var(--text-color)
+  margin: 0;
+  color: var(--text-color);
 }
 
 .easygui-list__item__subtitle {
-  font-weight: 500;
-  color: var(--text-color)
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--text-secondary-color);
 }
 
 /* GENERAL */
