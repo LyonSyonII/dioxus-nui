@@ -36,7 +36,8 @@ impl Theme {
     /// Returns CSS style corresponding to the current theme
     fn to_style(self) -> &'static str {
         match self {
-            Theme::Adwaita => dioxus_nui_macros::include_css!("styles/adwaita.css"),
+            // TODO: Temporary measure to test on other platforms until other styles are made
+            _ | Theme::Adwaita => dioxus_nui_macros::include_css!("styles/adwaita.css"),
             Theme::Qt => todo!(),
             Theme::Windows10 => todo!(),
             Theme::Windows11 => todo!(),
