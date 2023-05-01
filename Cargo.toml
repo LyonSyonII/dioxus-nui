@@ -17,3 +17,11 @@ dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus" }
 default = ["auto-init"]
 
 auto-init = []          # Automatically initialize NUI when a component is used. Enabled by default.
+
+[profile.release]
+# Configure release to optimize for size
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
