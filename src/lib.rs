@@ -76,24 +76,25 @@ impl Default for Theme {
 /// If not used, it'll be initialized with a default value (depending on the platform), see [`Theme`](theme) for more information.
 #[inline_props]
 pub fn InitNui(cx: Scope, theme: Option<Theme>) -> Element {
+    INITIALIZED.store(true, std::sync::atomic::Ordering::Release);
+
     render! {
-        style { 
-            display: "none",
-            theme.unwrap_or_default().to_style() 
-        }
+        style { display: "none", theme.unwrap_or_default().to_style() }
     }
 }
+
+/// If `true` NUI has been initialized with a theme.
+///
+/// Atomic because dioxus can start CheckIfUninit from different Tokio threads
+static INITIALIZED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 
 /// Checks if NUI is initialized.
 ///
 /// If not, it returns an [`InitNui`](InitNui) element.
 fn CheckIfUninit(cx: Scope) -> Element {
-    #[cfg(not(feature = "auto-init"))] return None;
-    /// If `true` NUI has been initialized with a theme.
-    /// 
-    /// Atomic because dioxus can start CheckIfUninit from different Tokio threads
-    static INITIALIZED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
-    
+    #[cfg(not(feature = "auto-init"))]
+    return None;
+
     if INITIALIZED.load(std::sync::atomic::Ordering::Acquire) {
         return None;
     }
@@ -101,13 +102,8 @@ fn CheckIfUninit(cx: Scope) -> Element {
     #[cfg(debug_assertions)]
     println!("NUI: Initialized NUI");
 
-    INITIALIZED.store(true, std::sync::atomic::Ordering::Release);
-    
-    render! {
-        InitNui {}
-    }
+    render! { InitNui {} }
 }
-
 
 #[derive(Default)]
 pub enum Align {
@@ -183,7 +179,7 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
     render_component! {
         button {
             $CLASS: "nui-btn {button_style}",
-            
+
             disabled: disabled.map_str(),
 
             $GLOBALS,
@@ -191,7 +187,6 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
         }
     }
 }
-
 
 // Headers
 #[reuse(global_attributes, global_events)]
@@ -297,14 +292,14 @@ pub struct ListItemProps<'a> {
     /// Can be any element.
     ///
     /// It will be positioned at the right side of the item.
-    prefix: Option<VNode<'a>>,
+    prefix: Option<Element<'a>>,
 
     /// Suffix of the list item.
     ///
     /// Can be any element.
     ///
     /// It will be positioned at the left side of the item.
-    suffix: Option<VNode<'a>>,
+    suffix: Option<Element<'a>>,
 }
 
 /// Creates a new item for a [`List`](crate::List).

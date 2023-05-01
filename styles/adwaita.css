@@ -216,7 +216,7 @@ html {
   margin-left: 0.5rem;
 }
 
-button.nui-list__item__prefix, button.nui-list__item__suffix {
+.nui-list__item__prefix > .nui-btn, .nui-list__item__suffix > .nui-btn {
   filter: brightness(1.27);
 }
 

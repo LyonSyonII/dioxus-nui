@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use dioxus::html::button;
 use dioxus::prelude::*;
 use dioxus_nui::prelude::include_css;
 use dioxus_nui::{Button, ButtonStyle, InitNui, List, ListItem, Theme, H1, H2, H3, H4};
@@ -14,8 +15,8 @@ fn App(cx: Scope) -> Element {
         style { include_css!("examples/index.css") }
 
         // Example starts here
-        // InitNui { theme: Theme::Adwaita }
-
+        InitNui { theme: Theme::Adwaita }
+        
         div { class: "nui-example-root",
             // Headers
             div {
@@ -45,6 +46,22 @@ fn App(cx: Scope) -> Element {
                 ListItem { title: "Only Title" }
                 ListItem { subtitle: "Only Subtitle" }
                 ListItem { title: "Left aligned (Default)" }
+                ListItem { title: "Center aligned", align: dioxus_nui::Align::Center }
+                ListItem { title: "Right aligned", align: dioxus_nui::Align::Right }
+                ListItem {
+                    title: "Row with Prefix",
+                    prefix: render! { Button { "Prefix" } }
+                }
+                ListItem {
+                    title: "Row with Suffix",
+                    suffix: render! { Button { "Suffix" } }
+                }
+                ListItem {
+                    title: "Row with both Prefix and Suffix",
+                    subtitle: "You can use any component you want!",
+                    prefix: render! { Button { "Prefix" } },
+                    suffix: render! { Button { "Suffix" } }
+                }
             }
         }
     }

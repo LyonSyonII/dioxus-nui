@@ -12,10 +12,10 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     justify-items: center;
     gap: 0.75rem;
-    width: 50%;
+    width: 65%;
 }
 
 .nui-example-list {
     padding-top: 0.25rem;
-    width: 50%;
+    width: 65%;
 }
