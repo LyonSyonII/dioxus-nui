@@ -182,12 +182,12 @@ html {
   color: var(--text-color);
 }
 
-.nui-list__item:first-child {
+.nui-list > .nui-list__item:first-of-type {
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
 }
 
-.nui-list__item:last-child {
+.nui-list > .nui-list__item:last-of-type {
   border-bottom-right-radius: 1rem;
   border-bottom-left-radius: 1rem;
 }

@@ -78,7 +78,7 @@ impl Default for Theme {
 pub fn InitNui(cx: Scope, theme: Option<Theme>) -> Element {
     render! {
         style { 
-            // display: "none",
+            display: "none",
             theme.unwrap_or_default().to_style() 
         }
     }
@@ -87,8 +87,8 @@ pub fn InitNui(cx: Scope, theme: Option<Theme>) -> Element {
 /// Checks if NUI is initialized.
 ///
 /// If not, it returns an [`InitNui`](InitNui) element.
-#[cfg(feature = "auto-init")]
 fn CheckIfUninit(cx: Scope) -> Element {
+    #[cfg(not(feature = "auto-init"))] return None;
     /// If `true` NUI has been initialized with a theme.
     /// 
     /// Atomic because dioxus can start CheckIfUninit from different Tokio threads
@@ -97,11 +97,12 @@ fn CheckIfUninit(cx: Scope) -> Element {
     if INITIALIZED.load(std::sync::atomic::Ordering::Acquire) {
         return None;
     }
-
-    println!("Initialized NUI");
+    
+    #[cfg(debug_assertions)]
+    println!("NUI: Initialized NUI");
 
     INITIALIZED.store(true, std::sync::atomic::Ordering::Release);
-
+    
     render! {
         InitNui {}
     }
@@ -172,26 +173,14 @@ pub struct ButtonProps<'a> {
     button_style: ButtonStyle,
 }
 
-impl dioxus::prelude::GlobalAttributes for ButtonProps<'_> {}
-
 pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
     let ButtonProps {
         button_style,
         disabled,
         ..
     } = cx.props;
-    
-    // TODO! Works when outside the render_component! macro but not inside
-    let init = {
-        #[cfg(feature = "auto-init")]
-        rsx! { CheckIfUninit {} }
-        
-        #[cfg(not(feature = "auto-init"))]
-        rsx! {}
-    };
 
     render_component! {
-        init
         button {
             $CLASS: "nui-btn {button_style}",
             
