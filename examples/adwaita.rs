@@ -14,12 +14,12 @@ fn App(cx: Scope) -> Element {
         style { include_css!("examples/index.css") }
 
         // Example starts here
-        InitNui { theme: Theme::Adwaita }
+        // InitNui { theme: Theme::Adwaita }
 
         div { class: "nui-example-root",
             // Headers
             div {
-                H1 { accent: true, "Title 1" }
+                H1 { class: "nui-accent-hover", "Title 1" }
                 H2 { "Title 2" }
                 H3 { "Title 3" }
                 H4 { "Title 4" }
@@ -36,8 +36,15 @@ fn App(cx: Scope) -> Element {
             }
 
             List { class: "nui-example-list",
-                ListItem { title: "Item 1", subtitle: "Subtitle 1" }
-                ListItem { title: "Item 2", subtitle: "Subtitle 2" }
+                ListItem {
+                    class: "nui-accent-hover nui-h1",
+                    title: "Lists",
+                    align: dioxus_nui::Align::Center
+                }
+                ListItem { title: "Title", subtitle: "Subtitle" }
+                ListItem { title: "Only Title" }
+                ListItem { subtitle: "Only Subtitle" }
+                ListItem { title: "Left aligned (Default)" }
             }
         }
     }

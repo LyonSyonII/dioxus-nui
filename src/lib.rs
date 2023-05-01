@@ -1,13 +1,28 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::{
-    dioxus_elements, inline_props, render, rsx, DragEvent, Element, EventHandler, FocusEvent,
-    FormEvent, GlobalAttributes as GA, ImageEvent, KeyboardEvent, MediaEvent, MouseEvent, Props,
-    Scope, ScrollEvent, SelectionEvent, ToggleEvent, VNode,
+    dioxus_elements, fc_to_builder, inline_props, render, rsx, DragEvent, Element, EventHandler,
+    FocusEvent, FormEvent, GlobalAttributes as GA, ImageEvent, KeyboardEvent, MediaEvent,
+    MouseEvent, Props, Scope, ScrollEvent, SelectionEvent, ToggleEvent, VNode,
 };
 use dioxus_nui_macros::render_component;
 use reusable::{reusable, reuse};
 
+/// Theme that NUI will use.
+///
+/// The default value changes depending on the target platform.
+///
+/// # Values
+/// - Windows 11:
+///     - Windows 10, Windows 11
+/// - MacOS
+/// - Linux
+///     - Qt: KDE
+///     - Adwaita: Gnome, Ubuntu, PopOS!
+///
+/// # Notes
+/// - The Windows 11 theme is used on Windows 10 to avoid including extra dependencies.
+/// - The Linux default is chosen based on the XDG_SESSION_DESKTOP env variable.
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub enum Theme {
     Adwaita,
@@ -51,10 +66,35 @@ impl Default for Theme {
     }
 }
 
+/// Initializes NUI styling.
+///
+/// Must be used before any element imported from this crate.
+///
+/// If not used, it'll be initialized with a default value (depending on the platform), see [`Theme`](theme) for more information.
 #[inline_props]
 pub fn InitNui(cx: Scope, theme: Option<Theme>) -> Element {
     render! {
         style { theme.unwrap_or_default().to_style() }
+    }
+}
+
+/// Checks if NUI is initialized.
+///
+/// If not, it returns an [`InitNui`](InitNui) element.
+fn CheckIfUninit(cx: Scope) -> Element {
+    /// If `true` NUI has been initialized with a theme.
+    /// 
+    /// Atomic because dioxus can start CheckIfUninit from different Tokio threads
+    static INITIALIZED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+    
+    if INITIALIZED.load(std::sync::atomic::Ordering::Acquire) {
+        return None;
+    }
+
+    INITIALIZED.store(true, std::sync::atomic::Ordering::Release);
+
+    render! {
+        InitNui {}
     }
 }
 
@@ -314,6 +354,30 @@ struct GlobalEvents<'a> {
 }
 
 #[derive(Default)]
+pub enum Align {
+    #[default]
+    Left,
+    Center,
+    Right,
+}
+
+impl ToStr<'static> for Align {
+    fn to_str(&self) -> &'static str {
+        match self {
+            Align::Left => "nui-align-left",
+            Align::Center => "nui-align-center",
+            Align::Right => "nui-align-right",
+        }
+    }
+}
+
+impl std::fmt::Display for Align {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.to_str())
+    }
+}
+
+#[derive(Default)]
 pub enum ButtonStyle {
     #[default]
     Regular,
@@ -322,16 +386,20 @@ pub enum ButtonStyle {
     Circular,
 }
 
-impl std::fmt::Display for ButtonStyle {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let d = match self {
+impl ToStr<'static> for ButtonStyle {
+    fn to_str(&self) -> &'static str {
+        match self {
             ButtonStyle::Regular => "nui-btn--regular",
             ButtonStyle::Compact => "nui-btn--compact",
             ButtonStyle::Pill => "nui-btn--pill",
             ButtonStyle::Circular => "nui-btn--circular",
-        };
+        }
+    }
+}
 
-        f.write_str(d)
+impl std::fmt::Display for ButtonStyle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.to_str())
     }
 }
 
@@ -354,8 +422,10 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
         disabled,
         ..
     } = cx.props;
+    
 
     render_component! {
+        CheckIfUninit {},
         button {
             $CLASS: "nui-btn {button_style}",
 
@@ -460,12 +530,11 @@ pub struct ListItemProps<'a> {
     /// Class of the subtitle, useful if you want to change its style.
     subtitle_class: Option<&'a str>,
 
-    /// Suffix of the list item.
+    /// Alignment of the Title and Subtitle attributes.
     ///
-    /// Can be any element.
-    ///
-    /// It will be positioned at the left side of the item.
-    suffix: Option<VNode<'a>>,
+    /// `Align::Left` by default.
+    #[props(default)]
+    align: Align,
 
     /// Prefix of the list item.
     ///
@@ -473,6 +542,13 @@ pub struct ListItemProps<'a> {
     ///
     /// It will be positioned at the right side of the item.
     prefix: Option<VNode<'a>>,
+
+    /// Suffix of the list item.
+    ///
+    /// Can be any element.
+    ///
+    /// It will be positioned at the left side of the item.
+    suffix: Option<VNode<'a>>,
 }
 
 /// Creates a new item for a [`List`](crate::List).
@@ -484,8 +560,9 @@ pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
         title_class,
         subtitle,
         subtitle_class,
-        suffix,
+        align,
         prefix,
+        suffix,
         ..
     } = cx.props;
 
@@ -501,12 +578,28 @@ pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
         }
     });
 
+    let prefix = prefix.as_ref().map(|p| {
+        rsx! {
+            div { class: "nui-list__item__prefix", p }
+        }
+    });
+
+    let suffix = suffix.as_ref().map(|s| {
+        rsx! {
+            div { class: "nui-list__item__suffix", s }
+        }
+    });
+
     render_component! {
         div {
             $CLASS: "nui-list__item",
             $GLOBALS,
-            title,
-            subtitle,
+            prefix,
+            div { class: "{align}",
+                title,
+                subtitle,
+            },
+            suffix,
         }
     }
 }
@@ -530,6 +623,9 @@ pub mod prelude {
 
 // UTILS
 trait ToStr<'a> {
+    /// Converts value to a `&str`.
+    ///
+    /// Same as `to_string` but with `&str` instead.
     fn to_str(&self) -> &'a str;
 }
 
@@ -551,6 +647,9 @@ impl<'a> ToStr<'a> for &'a str {
 
 trait MapStr<'a> {
     type StrOut;
+    /// Converts contained value to `&str`.
+    ///
+    /// Shorthand for `self.map(|s| s.to_str())`.
     fn map_str(self) -> Self::StrOut;
 }
 

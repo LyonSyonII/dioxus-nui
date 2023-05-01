@@ -129,7 +129,7 @@ pub fn render_component(input: TokenStream) -> TokenStream {
         let end = input.get(start..).and_then(|input| input.find(',').map(|e| e + start - 2)).expect(error);
         let class = input.get(start..=end).unwrap();
         
-        let props_accent = "{cx.props.accent.then(|| \\\"accent\\\").unwrap_or_default()}";
+        let props_accent = "{cx.props.accent.then(|| \\\"nui-accent\\\").unwrap_or_default()}";
         let props_class = "{cx.props.class.unwrap_or_default()}";
 
         input.replace_range(start..end+1, &format!("{class} {props_accent} {props_class}"));
