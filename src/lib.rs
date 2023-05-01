@@ -37,7 +37,7 @@ impl Theme {
     fn to_style(self) -> &'static str {
         match self {
             // TODO: Temporary measure to test on other platforms until other styles are made
-            _ | Theme::Adwaita => dioxus_nui_macros::include_css!("styles/adwaita.css"),
+            _ | Theme::Adwaita => dioxus_nui_macros::include_css_safe!("styles/adwaita.css"),
             Theme::Qt => todo!(),
             Theme::Windows10 => todo!(),
             Theme::Windows11 => todo!(),
@@ -75,13 +75,17 @@ impl Default for Theme {
 #[inline_props]
 pub fn InitNui(cx: Scope, theme: Option<Theme>) -> Element {
     render! {
-        style { theme.unwrap_or_default().to_style() }
+        style { 
+            // display: "none",
+            theme.unwrap_or_default().to_style() 
+        }
     }
 }
 
 /// Checks if NUI is initialized.
 ///
 /// If not, it returns an [`InitNui`](InitNui) element.
+#[cfg(feature = "auto-init")]
 fn CheckIfUninit(cx: Scope) -> Element {
     /// If `true` NUI has been initialized with a theme.
     /// 
@@ -426,12 +430,20 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
         ..
     } = cx.props;
     
+    // TODO! Works when outside the render_component! macro but not inside
+    let init = {
+        #[cfg(feature = "auto-init")]
+        rsx! { CheckIfUninit {} }
+        
+        #[cfg(not(feature = "auto-init"))]
+        rsx! {}
+    };
 
     render_component! {
-        CheckIfUninit {},
+        init
         button {
             $CLASS: "nui-btn {button_style}",
-
+            
             disabled: disabled.map_str(),
 
             $GLOBALS,
@@ -439,6 +451,7 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
         }
     }
 }
+
 
 // Headers
 #[reuse(global_attributes, global_events)]

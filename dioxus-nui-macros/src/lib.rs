@@ -137,8 +137,20 @@ pub fn render_component(input: TokenStream) -> TokenStream {
 
     // panic!("{input}");
 
-    format!("dioxus::prelude::render! {{ {input} }}")
-        .parse()
+    let init = stringify! {
+        let init = {
+            #[cfg(feature = "auto-init")]
+            dioxus::prelude::rsx! { CheckIfUninit {} }
+            
+            #[cfg(not(feature = "auto-init"))]
+            dioxus::prelude::rsx! {}
+        };
+    };
+
+    let out = format!("dioxus::prelude::render! {{ {input} }}");
+    // panic!("{out}");
+    
+        out.parse()
         .unwrap()
 }
 
