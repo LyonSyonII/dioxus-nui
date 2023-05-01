@@ -67,7 +67,7 @@ html {
   color: inherit;
   margin: 0;
   padding: 0;
-
+  
   /* Real properties */
   background-color: var(--element-color);
   font-weight: 700;
@@ -240,7 +240,9 @@ html {
 h1.nui-accent,
 h2.nui-accent,
 h3.nui-accent,
-h4.nui-accent {
+h4.nui-accent,
+p.nui-accent,
+span.nui-accent {
   background-color: unset;
   color: var(--accent-color);
 }
@@ -259,7 +261,9 @@ h4.nui-accent {
 h1.nui-accent-hover:hover,
 h2.nui-accent-hover:hover,
 h3.nui-accent-hover:hover,
-h4.nui-accent-hover:hover {
+h4.nui-accent-hover:hover,
+p.nui-accent-hover:hover,
+span.nui-accent-hover:hover {
   background-color: unset;
   color: var(--accent-color);
 }

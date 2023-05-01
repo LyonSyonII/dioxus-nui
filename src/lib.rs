@@ -9,6 +9,7 @@ use dioxus_nui_macros::render_component;
 use reusable::reuse;
 
 mod global;
+pub mod class;
 
 /// Theme that NUI will use.
 ///
@@ -105,6 +106,18 @@ fn CheckIfUninit(cx: Scope) -> Element {
     render! { InitNui {} }
 }
 
+/// Defines the horizontal alignment for text and elements on certain components.
+/// 
+/// # Example
+/// ```
+/// use dioxus_nui::{List, ListItem, Align};
+/// List {
+///     ListItem {
+///         title: "Interesting title",
+///         align: Align::Center
+///     }
+/// }
+/// ```
 #[derive(Default)]
 pub enum Align {
     #[default]
@@ -200,7 +213,7 @@ pub fn H1<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 
     render_component! {
         h1 {
-            $CLASS: "nui-h1",
+            $CLASS: "{class::h1}",
             $GLOBALS,
             $CHILDREN
         }
