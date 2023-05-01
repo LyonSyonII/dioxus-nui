@@ -92,6 +92,8 @@ fn CheckIfUninit(cx: Scope) -> Element {
         return None;
     }
 
+    println!("Initialized NUI");
+
     INITIALIZED.store(true, std::sync::atomic::Ordering::Release);
 
     render! {
