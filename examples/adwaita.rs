@@ -1,6 +1,5 @@
 #![allow(non_snake_case)]
 
-use dioxus::html::button;
 use dioxus::prelude::*;
 use dioxus_nui::prelude::include_css;
 use dioxus_nui::{Button, ButtonStyle, InitNui, List, ListItem, Theme, H1, H2, H3, H4};
