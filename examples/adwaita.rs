@@ -44,8 +44,12 @@ fn App(cx: Scope) -> Element {
                 ListItem { title: "Title", subtitle: "Subtitle" }
                 ListItem { title: "Only Title" }
                 ListItem { subtitle: "Only Subtitle" }
-                ListItem { title: "Left aligned (Default)", subtitle: "align: Align::Left", }
-                ListItem { title: "Center aligned", subtitle: "align: Align::Center", align: Align::Center }
+                ListItem { title: "Left aligned (Default)", subtitle: "align: Align::Left" }
+                ListItem {
+                    title: "Center aligned",
+                    subtitle: "align: Align::Center",
+                    align: Align::Center
+                }
                 ListItem { title: "Right aligned", subtitle: "align: Align::Right", align: Align::Right }
                 ListItem {
                     title: "Row with Prefix",
@@ -60,7 +64,7 @@ fn App(cx: Scope) -> Element {
                     subtitle: "You can use any component you want!",
                     prefix: render! { Button { "Prefix" } },
                     suffix: render! { Button { "Suffix" } },
-                    align: Align::Center,
+                    align: Align::Center
                 }
             }
         }
