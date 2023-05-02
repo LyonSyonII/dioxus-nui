@@ -67,7 +67,7 @@ html {
   color: inherit;
   margin: 0;
   padding: 0;
-  
+
   /* Real properties */
   background-color: var(--element-color);
   font-weight: 700;
@@ -182,12 +182,12 @@ html {
   color: var(--text-color);
 }
 
-.nui-list > .nui-list__item:first-of-type {
+.nui-list>.nui-list__item:first-of-type {
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
 }
 
-.nui-list > .nui-list__item:last-of-type {
+.nui-list>.nui-list__item:last-of-type {
   border-bottom-right-radius: 1rem;
   border-bottom-left-radius: 1rem;
 }
@@ -216,7 +216,9 @@ html {
   margin-left: 0.5rem;
 }
 
-.nui-list__item__prefix > .nui-btn, .nui-list__item__suffix > .nui-btn {
+/* If a Button is placed as a prefix or suffix of a ListItem, make it brighter (if not it'll be invisible) */
+.nui-list__item__prefix>.nui-btn,
+.nui-list__item__suffix>.nui-btn {
   filter: brightness(1.27);
 }
 

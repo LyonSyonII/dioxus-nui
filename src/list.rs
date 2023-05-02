@@ -1,8 +1,7 @@
+use crate::{class, init::CheckIfUninit, Align, UnwrapStr};
 use dioxus::prelude::*;
-use reusable::reuse;
 use dioxus_nui_macros::render_component;
-use crate::{init::CheckIfUninit, Align, UnwrapStr};
-
+use reusable::reuse;
 
 #[reuse(global_attributes, global_events)]
 #[derive(Props)]
@@ -20,7 +19,7 @@ pub fn List<'a>(cx: Scope<'a, ListProps<'a>>) -> Element {
 
     render_component! {
         div {
-            $CLASS: "nui-list",
+            $CLASS: "{class::list}",
             $GLOBALS,
             $CHILDREN
         }
@@ -80,31 +79,31 @@ pub fn ListItem<'a>(cx: Scope<'a, ListItemProps<'a>>) -> Element {
 
     let title = title.map(|t| {
         rsx! {
-            p { class: "nui-list__item__title {title_class.unwrap_as_str()}", t }
+            p { class: "{class::list_item_title} {title_class.unwrap_as_str()}", t }
         }
     });
 
     let subtitle = subtitle.map(|t| {
         rsx! {
-            p { class: "nui-list__item__subtitle {subtitle_class.unwrap_as_str()}", t }
+            p { class: "{class::list_item_subtitle} {subtitle_class.unwrap_as_str()}", t }
         }
     });
 
     let prefix = prefix.as_ref().map(|p| {
         rsx! {
-            div { class: "nui-list__item__prefix", p }
+            div { class: "{class::list_item_prefix}", p }
         }
     });
 
     let suffix = suffix.as_ref().map(|s| {
         rsx! {
-            div { class: "nui-list__item__suffix", s }
+            div { class: "{class::list_item_suffix}", s }
         }
     });
 
     render_component! {
         div {
-            $CLASS: "nui-list__item",
+            $CLASS: "{class::list_item}",
             $GLOBALS,
             prefix,
             div { class: "{align}",

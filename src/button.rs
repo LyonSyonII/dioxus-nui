@@ -1,7 +1,7 @@
+use crate::{init::CheckIfUninit, MapStr, ToStr};
 use dioxus::prelude::*;
 use dioxus_nui_macros::render_component;
 use reusable::reuse;
-use crate::{init::CheckIfUninit, ToStr, MapStr};
 
 #[derive(Default)]
 pub enum ButtonStyle {

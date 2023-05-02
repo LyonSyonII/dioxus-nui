@@ -1,12 +1,13 @@
 #![allow(non_snake_case)]
 
+// Must be first because of the 
+
 mod global;
-mod init;
+pub mod class;
 mod button;
 mod header;
+mod init;
 mod list;
-pub mod class;
-
 
 /// Theme that NUI will use.
 ///
@@ -68,6 +69,8 @@ impl Default for Theme {
 }
 
 /// Defines the horizontal alignment for text and elements on certain components.
+///
+/// `Align::Left` by default.
 /// 
 /// # Example
 /// ```
@@ -90,9 +93,9 @@ pub enum Align {
 impl ToStr<'static> for Align {
     fn to_str(&self) -> &'static str {
         match self {
-            Align::Left => "nui-align-left",
-            Align::Center => "nui-align-center",
-            Align::Right => "nui-align-right",
+            Align::Left => class::align_left,
+            Align::Center => class::align_center,
+            Align::Right => class::align_right,
         }
     }
 }
@@ -102,31 +105,6 @@ impl std::fmt::Display for Align {
         f.write_str(self.to_str())
     }
 }
-
-// Re-export all elements to avoid having to import all modules.
-pub use crate::init::*;
-pub use crate::button::*;
-pub use crate::list::*;
-pub use crate::header::*;
-pub use dioxus_nui_macros::{include_css, include_css_safe};
-
-/// Re-export of all the elements with the same name as the [`dioxus`](dioxus::prelude::dioxus_elements) ones.
-///
-/// Useful if you want to replace all of them without having to change the names.
-///
-/// All components unique to dioxus-nui (for example [`List`](crate::List)) will remain with the same name.
-pub mod prelude {
-    pub use crate::init::*;
-    pub use crate::button::Button as button;
-    pub use crate::list::*;
-    pub use crate::header::H1 as h1;
-    pub use crate::header::H2 as h2;
-    pub use crate::header::H3 as h3;
-    pub use crate::header::H4 as h4;
-    pub use dioxus_nui_macros::{include_css, include_css_safe};
-}
-
-
 
 // UTILS
 trait ToStr<'a> {
@@ -175,7 +153,7 @@ impl<'a, T: ToStr<'a>, E> MapStr<'a> for Result<T, E> {
 }
 
 trait UnwrapStr<'a> {
-    /// Returns value contained as `&str` or `""` if it's `Result::Error` or `Option::None`.
+    /// Returns value contained as `&str` if "happy path" or `""` if it's `Result::Error` or `Option::None`.
     fn unwrap_as_str(&'a self) -> &'a str;
 }
 
@@ -195,4 +173,27 @@ impl<'a, T: ToStr<'a>, E> UnwrapStr<'a> for Result<T, E> {
             Err(_) => "",
         }
     }
+}
+
+// Re-export all elements to avoid having to import all modules.
+pub use crate::button::*;
+pub use crate::header::*;
+pub use crate::init::*;
+pub use crate::list::*;
+pub use dioxus_nui_macros::{include_css, include_css_safe};
+
+/// Re-export of all the elements with the same name as the [`dioxus`](dioxus::prelude::dioxus_elements) ones.
+///
+/// Useful if you want to replace all of them without having to change the names.
+///
+/// All components unique to dioxus-nui (for example [`List`](crate::List)) will remain with the same name.
+pub mod prelude {
+    pub use crate::button::Button as button;
+    pub use crate::header::H1 as h1;
+    pub use crate::header::H2 as h2;
+    pub use crate::header::H3 as h3;
+    pub use crate::header::H4 as h4;
+    pub use crate::init::*;
+    pub use crate::list::*;
+    pub use dioxus_nui_macros::{include_css, include_css_safe};
 }

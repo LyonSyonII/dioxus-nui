@@ -1,5 +1,5 @@
-use dioxus::prelude::*;
 use crate::Theme;
+use dioxus::prelude::*;
 
 /// Initializes NUI styling.
 ///
@@ -30,7 +30,7 @@ pub(crate) fn CheckIfUninit(cx: Scope) -> Element {
     if INITIALIZED.load(std::sync::atomic::Ordering::Acquire) {
         return None;
     }
-    
+
     #[cfg(debug_assertions)]
     println!("NUI: Initialized NUI");
 
