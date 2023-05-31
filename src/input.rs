@@ -1,4 +1,4 @@
-use crate::ToStr;
+use crate::{ToStr, class};
 
 use std::fmt::Display;
 
@@ -14,6 +14,7 @@ pub struct InputProps<'a> {
     on_change: EventHandler<'a, String>,
     value: Option<&'a str>,
     name: Option<&'a str>,
+    label: Option<&'a str>,
 }
 
 pub fn Input<'a>(cx: Scope<'a, InputProps<'a>>) -> Element<'a> {
@@ -22,17 +23,22 @@ pub fn Input<'a>(cx: Scope<'a, InputProps<'a>>) -> Element<'a> {
         input_type,
         on_change,
         value,
+        label,
         ..
     } = cx.props;
 
     render_component! {
-        input {
-            $CLASS: "",
-            oninput: move |v: Event<FormData>| on_change.call(v.value.clone()),
-            name: *name,
-            r#type: "{input_type}",
-            value: *value,
-            $GLOBALS,
+        label {
+            class: "{class::label}",
+            *label,
+            input {
+                $CLASS: "{input_type.to_style()}",
+                oninput: move |v: Event<FormData>| on_change.call(v.value.clone()),
+                name: *name,
+                r#type: "{input_type}",
+                value: *value,
+                $GLOBALS,
+            }
         }
     }
 }
@@ -80,7 +86,7 @@ impl InputType {
     pub fn to_style(&self) -> &'static str {
         use crate::class;
         match self {
-            InputType::Button => constcat::concat!(class::btn, " ", class::btn_regular),
+            InputType::Button => constcat::concat!(class::btn, " ", class::btn_compact),
             InputType::Checkbox => class::input_checkbox,
             InputType::Color => class::input_color,
             InputType::Date => class::input_date,

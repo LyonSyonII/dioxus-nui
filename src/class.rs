@@ -40,6 +40,8 @@ pub const btn_pill: &str = "nui-btn--pill";
 /// Prefer using the [`Button`](crate::Button) component directly.
 pub const btn_circular: &str = "nui-btn--circular";
 
+/// Styles text as a NUI `Label`.
+pub const label: &str = "nui-label";
 /// Styles text as a NUI `H1`.
 pub const h1: &str = "nui-h1";
 /// Styles text as a NUI `H2`.

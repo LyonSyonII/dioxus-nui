@@ -64,106 +64,118 @@ fn App(cx: Scope) -> Element {
                     suffix: render! { Button { "Suffix" } }
                 }
                 ListItem {
-                    title: "Row with both Prefix and Suffix",
-                    subtitle: "You can use any component you want!",
-                    prefix: render! { Button { "Prefix" } },
-                    suffix: render! { Button { "Suffix" } },
+                    title: "Row with both Prefix and Suffix"
+                    subtitle: "You can use any component you want!"
+                    prefix: render! { Button { "Prefix" } }
+                    suffix: render! { Button { "Suffix" } }
                     align: Align::Center
                 }
             }
-
+            
             // Inputs
-            label {
-                "Button"
+            List {
+                ListItem {
+                    Input {
+                        label: "Pick a color:"
+                        input_type: InputType::Color
+                        on_change: move |v| println!("{v}")
+                    }
+                }
+                Input {
+                    on_change: move |v| println!("{v}")
+                    input_type: InputType::Button
+                    value: "Button"
+                }
+                Input {
+                    label: "Checkbox"
+                    input_type: InputType::Checkbox
+                    on_change: move |v| println!("{v}")
+                }
+                Input {
+                    label: "Pick a color:"
+                    input_type: InputType::Color
+                    on_change: move |v| println!("{v}")
+                }
+                Input {
+                    label: "Enter a date:"
+                    input_type: InputType::Date
+                    on_change: move |v| println!("{v}")
+                }
+                Input {
+                    label: "Enter a date and time:"
+                    on_change: move |v| println!("{v}")
+                    input_type: InputType::DatetimeLocal
+                }
+                Input {
+                    label: "Enter your email:"
+                    on_change: move |v| println!("{v}")
+                    input_type: InputType::Email
+                }
                 Input {
                     on_change: move |v| println!("{v}"),
-                    input_type: InputType::Button,
-                    name: "Button"
+                    input_type: InputType::File,
                 }
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Checkbox,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Color,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Date,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::DatetimeLocal,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Email,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::File,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Hidden,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Image,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Month,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Number,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Password,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Radio,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Range,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Reset,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Search,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Submit,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Tel,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Text,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Time,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Url,
-            }
-            Input {
-                on_change: move |v| println!("{v}"),
-                input_type: InputType::Week,
+                Input {
+                    label: "Should be hidden"
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Hidden,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Image,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Month,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Number,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Password,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Radio,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Range,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Reset,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Search,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Submit,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Tel,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Text,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Time,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Url,
+                }
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Week,
+                }
             }
         }
     }

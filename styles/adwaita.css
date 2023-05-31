@@ -126,6 +126,14 @@ html {
 }
 
 /* HEADERS */
+.nui-label {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: var(--text-color);
+  display: flex;
+  gap: 1rem;
+}
 
 .nui-h1 {
   margin: 0;
