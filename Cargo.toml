@@ -8,6 +8,7 @@ edition = "2021"
 dioxus = { git = "https://github.com/DioxusLabs/dioxus" }
 reusable = "0.1.0"
 dioxus-nui-macros = { path = "dioxus-nui-macros" }
+constcat = { version = "0.3.0", default-features = false }
 
 [dev-dependencies]
 dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus" }
@@ -17,6 +18,9 @@ dioxus-desktop = { git = "https://github.com/DioxusLabs/dioxus" }
 default = ["auto-init"]
 
 auto-init = []          # Automatically initialize NUI when a component is used. Enabled by default.
+
+[profile.dev]
+incremental = true
 
 [profile.release]
 # Configure release to optimize for size

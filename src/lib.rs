@@ -1,12 +1,12 @@
 #![allow(non_snake_case)]
 
-// Must be first because of the 
-
 mod global;
-pub mod class;
 mod button;
+pub mod class;
 mod header;
+mod icons;
 mod init;
+mod input;
 mod list;
 
 /// Theme that NUI will use.
@@ -71,7 +71,7 @@ impl Default for Theme {
 /// Defines the horizontal alignment for text and elements on certain components.
 ///
 /// `Align::Left` by default.
-/// 
+///
 /// # Example
 /// ```
 /// use dioxus_nui::{List, ListItem, Align};
@@ -107,10 +107,21 @@ impl std::fmt::Display for Align {
 }
 
 // UTILS
+/// Implements the `to_str` method.
+///
+/// Converts value to a `&str`.
+///
+/// Same as `to_string` but with `&str` instead.
 trait ToStr<'a> {
     /// Converts value to a `&str`.
     ///
     /// Same as `to_string` but with `&str` instead.
+    ///
+    /// # Example
+    /// ```
+    /// let t = 2 > 1;
+    /// assert_eq!(t.to_str(), "true");
+    /// ```
     fn to_str(&self) -> &'a str;
 }
 
@@ -153,7 +164,7 @@ impl<'a, T: ToStr<'a>, E> MapStr<'a> for Result<T, E> {
 }
 
 trait UnwrapStr<'a> {
-    /// Returns value contained as `&str` if "happy path" or `""` if it's `Result::Error` or `Option::None`.
+    /// Returns value contained as `&str` if "happy path" or `""` if it's `Result::Err` or `Option::None`.
     fn unwrap_as_str(&'a self) -> &'a str;
 }
 
@@ -179,6 +190,7 @@ impl<'a, T: ToStr<'a>, E> UnwrapStr<'a> for Result<T, E> {
 pub use crate::button::*;
 pub use crate::header::*;
 pub use crate::init::*;
+pub use crate::input::*;
 pub use crate::list::*;
 pub use dioxus_nui_macros::{include_css, include_css_safe};
 
@@ -194,6 +206,7 @@ pub mod prelude {
     pub use crate::header::H3 as h3;
     pub use crate::header::H4 as h4;
     pub use crate::init::*;
+    pub use crate::input::Input as input;
     pub use crate::list::*;
     pub use dioxus_nui_macros::{include_css, include_css_safe};
 }

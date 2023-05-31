@@ -138,7 +138,7 @@ pub fn render_component(input: TokenStream) -> TokenStream {
     // panic!("{input}");
 
     let init = stringify! {
-        CheckIfUninit{}
+        crate::init::CheckIfUninit{}
     };
     
     let out = format!("dioxus::prelude::render! {{ {init} {input} }}");

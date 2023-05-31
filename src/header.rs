@@ -25,7 +25,7 @@ pub fn H1<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 
 pub fn H2<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
     let HeaderProps { align, .. } = cx.props;
-    
+
     render_component! {
         h2 {
             $CLASS: "{class::h2} {align}",
@@ -37,7 +37,7 @@ pub fn H2<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 
 pub fn H3<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
     let HeaderProps { align, .. } = cx.props;
-    
+
     render_component! {
         h3 {
             $CLASS: "{class::h3} {align}",
@@ -49,7 +49,7 @@ pub fn H3<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
 
 pub fn H4<'a>(cx: Scope<'a, HeaderProps<'a>>) -> Element {
     let HeaderProps { align, .. } = cx.props;
-    
+
     render_component! {
         h4 {
             $CLASS: "{class::h4} {align}",

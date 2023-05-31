@@ -2,7 +2,10 @@
 
 use dioxus::prelude::*;
 use dioxus_nui::prelude::include_css;
-use dioxus_nui::{class, Align, Button, ButtonStyle, InitNui, List, ListItem, Theme, H1, H2, H3, H4};
+use dioxus_nui::{
+    class, Align, Button, ButtonStyle, InitNui, Input, InputType, List, ListItem, Theme, H1, H2,
+    H3, H4,
+};
 
 fn main() {
     // hot_reload_init!(dioxus_hot_reload::Config::new().with_paths(&["src", "examples", "styles"]).with_rebuild_command("cargo run --example adwaita"));
@@ -35,6 +38,7 @@ fn App(cx: Scope) -> Element {
                 Button { button_style: ButtonStyle::Circular, "C" }
             }
 
+            // List
             List { class: "nui-example-list",
                 ListItem {
                     class: "{class::accent_hover} {class::h1}",
@@ -66,6 +70,100 @@ fn App(cx: Scope) -> Element {
                     suffix: render! { Button { "Suffix" } },
                     align: Align::Center
                 }
+            }
+
+            // Inputs
+            label {
+                "Button"
+                Input {
+                    on_change: move |v| println!("{v}"),
+                    input_type: InputType::Button,
+                    name: "Button"
+                }
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Checkbox,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Color,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Date,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::DatetimeLocal,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Email,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::File,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Hidden,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Image,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Month,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Number,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Password,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Radio,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Range,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Reset,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Search,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Submit,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Tel,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Text,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Time,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Url,
+            }
+            Input {
+                on_change: move |v| println!("{v}"),
+                input_type: InputType::Week,
             }
         }
     }
